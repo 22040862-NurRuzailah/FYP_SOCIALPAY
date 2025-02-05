@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>SocialPay - Money Made Socials</title>
+
+	<link rel="icon" type="image/png" href="images/payment.png">
+
+	<!-- Fonts -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Sofia+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap"
+		rel="stylesheet">
+
+	<!-- Styles -->
+	<link rel="stylesheet" href="fonts/fontawesome/css/all.min.css">
+	<link rel="stylesheet" href="simple-lightbox/lightbox.css">
+	<link rel="stylesheet" href="bxslider/jquery.bxslider.css">
+	<link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="/css/style-responsive.css">
+
+	<style>
+		html {
+			scroll-behavior: smooth;
+		}
+
+		#about {
+			scroll-margin-top: 135px;
+			/* Adjust based on header height */
+		}
+
+		#contact {
+			scroll-margin-top: 135px;
+			/* Fix for the Enquiry section */
+		}
+
+		.banner-content {
+			text-align: center;
+			padding: 20px;
+		}
+
+		.banner img {
+			border-radius: 10px;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+		}
+
+		.arrows {
+			display: none;
+		}
+
+		.arrowswrap {
+			display: none;
+		}
+
+		.modal {
+			display: none;
+			position: fixed;
+			z-index: 1000;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			overflow: auto;
+			background-color: rgba(0, 0, 0, 0.4);
+		}
+
+		.modal-content {
+			background-color: #fff;
+			margin: 15% auto;
+			padding: 20px;
+			border: 1px solid #888;
+			border-radius: 8px;
+			width: 80%;
+			max-width: 400px;
+			text-align: center;
+		}
+
+		.modal-content h2 {
+			margin: 0 0 10px;
+			color: green;
+		}
+
+		.modal-content button {
+			background-color: black;
+			color: white;
+			border: none;
+			padding: 10px 20px;
+			border-radius: 5px;
+			cursor: pointer;
+			font-size: 14px;
+		}
+
+		.modal-content button:hover {
+			background-color: #555;
+		}
+	</style>
+	</style>
+
+	<!-- Scripts -->
+	<script src="js/jquery.js"></script>
+	<script src="simple-lightbox/lightbox.js"></script>
+	<script src="bxslider/jquery.bxslider.js"></script>
+	<script src="js/scripts.js"></script>
+	<script src="contactform/contactform.js"></script>
+</head>
+
+<body id="home">
+
+	<div class="progressbar_wrap">
+		<div class="progressbar" id="progressbar"></div>
+	</div>
+	<!--/PROGRESS-->
+
+	<header>
+		<div class="container">
+			<div class="headercontent">
+				<a href="#" class="logo">
+					<img src="images/splogo.png" alt="SocialPay" style="width: 200px; height: auto;">
+				</a>
+
+				<div class="menuicons" style="display:none;">
+					<a href="javascript:void();" class="shownav">
+						<span class="fa-solid fa-bars"></span>
+					</a>
+					<a href="javascript:void();" class="hidenav" style="display:none;">
+						<span class="fa-solid fa-times"></span>
+					</a>
+				</div>
+				<nav class="headernav" id="headnav">
+					<ul>
+						<li class="active"><a href="#home">Home</a></li>
+						<li><a href="#about">About</a></li>
+						<li><a href="#gallery">Services</a></li>
+						<li><a href="#contact">Enquiry</a></li>
+						<li><a href="/login">Login/Signup</a></li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+	</header>
+	<!--/HEADER-->
+
+	<!-- Logout Message -->
+	<div id="logout-message" style="display: none; text-align: center; color: green; font-weight: bold;">
+		Logged out. See you again!
+	</div>
+
+	<section class="banner">
+		<div class="bxslider_wrap">
+			<div class="bxslider">
+				<div class="slide">
+					<div class="slidecontent"> 
+						<div class="container" style="margin-bottom: 100px">
+							<h3>Pay, Request and Connect with SocialPay.</h3>
+						</div>
+					</div>
+					<img src="images/digital.jpg" class="slideimage bigtosmall" alt="SocialPay">
+				</div>
+			</div>
+		</div>
+	</section>
+
+
+
+	<section class="aboutcontent" id="about">
+		<div class="container">
+			<div class="contentwrap">
+				<h3>About</h3>
+				<p>
+					Welcome to SocialPay - The easiest way to share, send and manage money with friends, family and
+					others in
+					your circle. With secure and fast transactions, plus a seamless, social experience, SocialPay makes
+					it
+					easy to handle finances right from your phone. Simply link your bank account, send or request money.
+					Stay
+					connected with instant updates and notifications. Join SocialPay today for a smarter, safer way to
+					pay!
+				</p>
+				<h4 id="price">
+					Ready to embark on this journey?
+					<br>
+					<span>*Registration is free</span>
+				</h4>
+				<div class="linkwrap">
+				    <a href="/signup" class="buylink">
+				        Join Now! <br>
+				        <span>(click me)</span>
+				    </a>
+				</div>
+
+			</div>
+		</div>
+	</section>
+	<!--/ABOUT-->
+
+
+
+
+	<section class="gallery" id="gallery">
+		<div class="container">
+
+
+			<div class="picgallery_wrap">
+				<div class="picgallery">
+
+
+					<div class="item">
+						<div class="itemcontent">
+							<div class="overlay">
+								<a href="images/gallery/image1.jpg"><span class="fas fa-plus"></span></a>
+								<div class="info caps">
+									<h3>Connect with your circle</h3>
+								</div>
+							</div>
+							<img src="images/gallery/image1.jpg" alt="">
+						</div>
+					</div>
+
+					<div class="item">
+						<div class="itemcontent">
+							<div class="overlay">
+								<a href="images/gallery/image2.jpg"><span class="fas fa-plus"></span></a>
+								<div class="info caps">
+									<h3>Link your bank details</h3>
+								</div>
+							</div>
+							<img src="images/gallery/image2.jpg" alt="">
+						</div>
+					</div>
+
+					<div class="item">
+						<div class="itemcontent">
+							<div class="overlay">
+								<a href="images/gallery/image3.jpg"><span class="fas fa-plus"></span></a>
+								<div class="info caps">
+									<h3>Pay and request payments</h3>
+								</div>
+							</div>
+							<img src="images/gallery/image3.jpg" alt="">
+						</div>
+					</div>
+
+					<div class="item video">
+						<div class="itemcontent">
+							<div class="videowrap">
+								<div class="overlay">
+									<div class="playpause_btns">
+										<a href="javascript:void();" class="pp vplay">
+											<span class="fa-solid fa-circle-play"></span>
+										</a>
+										<a href="javascript:void();" class="pp vpause" style="display: none;">
+											<span class="fa-solid fa-circle-pause"></span>
+										</a>
+									</div>
+								</div>
+								<video autoplay muted loop playsinline>
+									<source src="images/gallery/woman.mp4" type="video/mp4">
+								</video>
+							</div>
+						</div>
+					</div>
+
+
+
+					<div class="item">
+						<div class="itemcontent">
+							<div class="overlay">
+								<a href="images/gallery/spending2.jpg"><span class="fas fa-plus"></span></a>
+								<div class="info caps">
+									<h3>Budget Overview</h3>
+								</div>
+							</div>
+							<img src="images/gallery/spending2.jpg" alt="">
+						</div>
+					</div>
+
+
+					<div class="item">
+						<div class="itemcontent">
+							<div class="overlay">
+								<a href="images/gallery/secure.jpg"><span class="fas fa-plus"></span></a>
+								<div class="info caps">
+									<h3>Secure payments, always</h3>
+								</div>
+							</div>
+							<img src="images/gallery/secure.jpg" alt="">
+						</div>
+					</div>
+
+
+					<div class="item">
+						<div class="itemcontent">
+							<div class="overlay">
+								<a href="images/gallery/bills.jpg"><span class="fas fa-plus"></span></a>
+								<div class="info caps">
+									<h3>Split bills with ease</h3>
+								</div>
+							</div>
+							<img src="images/gallery/bills.jpg" alt="">
+						</div>
+					</div>
+
+				</div>
+			</div>
+			<!--picgallery_wrap-->
+
+
+		</div>
+	</section>
+	<!--/GALLERY-->
+
+
+	<section class="contact" id="contact">
+		<div class="container">
+			<h3>Need Help?</h3>
+			<p>
+				Fill out the form below, and our support team will get back to you shortly. We're here to help with any
+				questions, issues, or feedback!
+			</p>
+
+			<div class="formwrap">
+				<form id="contactform" onsubmit="handleFormSubmit(event)">
+					<input type="text" name="name" placeholder="Enter Name*" required>
+					<input type="email" name="email" placeholder="Email Address*" required>
+					<input type="text" name="phone" placeholder="Phone*" required>
+					<input type="text" name="city" placeholder="City (eg. New York)*" required>
+					<textarea name="message" placeholder="Describe..." required></textarea>
+					<button type="submit" name="submit" id="submit">Submit <span
+							class="fa-solid fa-arrow-right"></span></button>
+				</form>
+			</div>
+		</div>
+	</section>
+	<!-- Modal -->
+	<div id="logoutModal" class="modal">
+		<div class="modal-content">
+			<h2>Logged out. See you again!</h2>
+			<button onclick="closeModal()">OK</button>
+		</div>
+	</div>
+
+	<footer>
+		<div class="container">
+			<div class="copyright">
+				<p>Copyright &copy; 2024 SocialPay. All Rights Reserved</p>
+			</div>
+		</div>
+	</footer>
+
+	<script>
+		// Show logout modal on query parameter
+		const urlParams = new URLSearchParams(window.location.search);
+		if (urlParams.get("logout") === "true") {
+			const modal = document.getElementById("logoutModal");
+			modal.style.display = "block";
+		}
+
+		// Close the modal
+		function closeModal() {
+			const modal = document.getElementById("logoutModal");
+			modal.style.display = "none";
+			window.history.replaceState({}, document.title, window.location.pathname);
+		}
+
+		// Enquiry form submission
+		function handleFormSubmit(event) {
+			event.preventDefault();
+			alert("Form submitted. Our team will contact you shortly.");
+			document.getElementById("contactform").reset();
+		}
+	</script>
+</body>
+
+</html>

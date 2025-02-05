@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Verify OTP</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			text-align: center;
+			padding: 20px;
+		}
+
+		.otp-container {
+			margin: 0 auto;
+			max-width: 400px;
+			padding: 20px;
+			border: 1px solid #ddd;
+			border-radius: 8px;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+			background-color: #f9f9f9;
+		}
+
+		input[type="text"],
+		button {
+			display: block;
+			margin: 10px auto;
+			padding: 10px;
+			font-size: 16px;
+			width: 100%;
+			max-width: 300px;
+		}
+
+		button {
+			background-color: #000;
+			color: white;
+			border: none;
+			border-radius: 4px;
+			cursor: pointer;
+		}
+
+		button:hover {
+			background-color: #555;
+		}
+
+		.error,
+		.success {
+			color: red;
+			margin-top: 10px;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="otp-container">
+		<h2>Verify OTP</h2>
+		<p>Please enter the OTP sent to your email to activate your account.</p>
+		<form id="otpForm" action="/verify-otp" method="POST">
+			<input type="hidden" name="email" id="email" value="${email}">
+			<input type="text" name="otp" placeholder="Enter OTP" maxlength="6" required>
+			<button type="submit">Verify</button>
+		</form>
+		<form id="resendOtpForm" action="/resend-otp" method="POST">
+			<input type="hidden" name="email" id="resend-email" value="${email}">
+			<button type="submit">Resend OTP</button>
+		</form>
+		<div id="message" class="error">${error}</div>
+		<div id="message" class="success">${success}</div>
+
+	</div>
+</body>
+
+</html>

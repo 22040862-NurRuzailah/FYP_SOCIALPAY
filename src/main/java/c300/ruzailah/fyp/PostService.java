@@ -1,0 +1,58 @@
+package c300.ruzailah.fyp;
+
+import java.io.IOException;
+import java.time.LocalDateTime;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+@Service
+public class PostService {
+    @Autowired
+    private PostRepository postRepository;
+
+    @Autowired
+    private CommentRepository commentRepository;
+
+    public Post createPost(String title, String content, MultipartFile imageFile, Member member) throws IOException {
+        Post post = new Post();
+        post.setTitle(title);
+        post.setContent(content);
+        post.setTimestamp(LocalDateTime.now());
+        post.setMember(member);
+        
+        if (imageFile != null && !imageFile.isEmpty()) {
+            post.setImage(imageFile.getBytes());
+        }
+        
+        return postRepository.save(post);
+    }
+
+    public void createComment(Post post, String content, Member member) {
+        Comment comment = new Comment();
+        comment.setContent(content);
+        comment.setTimestamp(LocalDateTime.now());
+        comment.setPost(post);
+        comment.setMember(member);
+        commentRepository.save(comment);
+    }
+
+
+    public void likePosts(long id) {
+        Post post = postRepository.findById(id).orElse(null);
+        if (post != null) {
+            post.setLikes(post.getLikes() + 1);
+            postRepository.save(post);
+        }
+    }
+
+
+    public void reportPost(long id) {
+        Post post = postRepository.findById(id).orElse(null);
+        if (post != null) {
+            post.setReported(true);
+            postRepository.save(post);
+        }
+    }
+}
