@@ -1,117 +1,106 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Transaction Management</title>
-    <!-- Global Styles -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        #sidebarMenu {
+            width: 240px;
+            background-color: #ffffff;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        #sidebarMenu .list-group-item {
+            border: none;
+            padding: 15px 20px;
+            font-size: 16px;
+            color: #333;
+            transition: background-color 0.3s ease;
+        }
+
+        #sidebarMenu .list-group-item:hover {
+            background-color: #f2f2f2;
+        }
+
+        #sidebarMenu .list-group-item.active {
+            background-color: #0d6efd;
+            color: white;
+        }
+
+        #sidebarMenu i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        main {
+            margin-left: 240px;
+            padding: 20px;
+            flex: 1;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        td, th {
+            padding: 12px;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .btn-flag {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-flag:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+    </style>
 </head>
-<style>
-    /* General Styles */
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f9;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        min-height: 100vh;
-    }
-
-    /* Sidebar Styles */
-    #sidebarMenu {
-        width: 240px;
-        background-color: #ffffff;
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        overflow-y: auto;
-        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-        z-index: 1000;
-    }
-
-    #sidebarMenu .list-group-item {
-        border: none;
-        padding: 15px 20px;
-        font-size: 16px;
-        color: #333;
-        transition: background-color 0.3s ease;
-    }
-
-    #sidebarMenu .list-group-item:hover {
-        background-color: #f2f2f2;
-    }
-
-    #sidebarMenu .list-group-item.active {
-        background-color: #0d6efd;
-        color: white;
-    }
-
-    #sidebarMenu i {
-        margin-right: 10px;
-        font-size: 18px;
-    }
-
-    /* Main Content Styles */
-    main {
-        margin-left: 240px;
-        /* Adjust for sidebar */
-        padding: 20px;
-        flex: 1;
-    }
-
-    .container {
-        background-color: #ffffff;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Table Styles */
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-        text-align: left;
-    }
-
-    td,
-    th {
-        padding: 12px;
-        border: 1px solid #ddd;
-    }
-
-    th {
-        background-color: #f2f2f2;
-        font-weight: bold;
-    }
-
-    tr:hover {
-        background-color: #f9f9f9;
-    }
-
-    .btn-flag {
-        background-color: #dc3545;
-        color: white;
-    }
-
-    .btn-flag:disabled {
-        background-color: #6c757d;
-        cursor: not-allowed;
-    }
-</style>
-
 <body>
-    <!-- Include Admin Header -->
     <header th:replace="fragments/admin-header :: admin-header"></header>
-    <!-- Main Content -->
+
     <main>
         <div class="container">
             <h1>Transactions</h1>
-            <!-- Filter and Reset Buttons -->
             <div class="mb-3 d-flex justify-content-between">
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#filterModal">
                     <i class="fas fa-filter"></i> Filter Transactions
@@ -120,9 +109,9 @@
                     <i class="fas fa-redo"></i> Reset Filters
                 </button>
             </div>
+
             <!-- Filter Modal -->
-            <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel"
-                aria-hidden="true">
+            <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -134,8 +123,7 @@
                                 <div class="row g-3">
                                     <div class="col-md-4">
                                         <label for="userId" class="form-label">User ID</label>
-                                        <input type="number" class="form-control" id="userId" name="userId"
-                                            placeholder="All Users">
+                                        <input type="number" class="form-control" id="userId" name="userId" placeholder="All Users">
                                     </div>
                                     <div class="col-md-4">
                                         <label for="startDate" class="form-label">Start Date</label>
@@ -147,13 +135,11 @@
                                     </div>
                                     <div class="col-md-4">
                                         <label for="year" class="form-label">Year</label>
-                                        <input type="number" class="form-control" id="year" name="year"
-                                            placeholder="e.g., 2023">
+                                        <input type="number" class="form-control" id="year" name="year" placeholder="e.g., 2023">
                                     </div>
                                     <div class="col-md-4">
                                         <label for="month" class="form-label">Month</label>
-                                        <input type="number" class="form-control" id="month" name="month"
-                                            placeholder="e.g., 1-12">
+                                        <input type="number" class="form-control" id="month" name="month" placeholder="e.g., 1-12">
                                     </div>
                                     <div class="col-md-4">
                                         <label for="amount" class="form-label">Transaction Amount</label>
@@ -162,14 +148,12 @@
                                                 <option value=">">Greater Than</option>
                                                 <option value="<">Less Than</option>
                                             </select>
-                                            <input type="number" step="0.01" class="form-control" id="amount"
-                                                name="amount" placeholder="e.g., 100.00">
+                                            <input type="number" step="0.01" class="form-control" id="amount" name="amount" placeholder="e.g., 100.00">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                     <button type="submit" class="btn btn-success">Apply Filters</button>
                                 </div>
                             </form>
@@ -177,6 +161,31 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Flag Reason Modal -->
+            <div class="modal fade" id="flagReasonModal" tabindex="-1" aria-labelledby="flagReasonModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="flagReasonModalLabel">Flag Transaction</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="flagReasonForm">
+                                <div class="mb-3">
+                                    <label for="flagReason" class="form-label">Reason for Flagging</label>
+                                    <textarea class="form-control" id="flagReason" rows="3" required></textarea>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-danger" id="submitFlagReason">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Transactions Table -->
             <table class="table">
                 <thead>
@@ -198,10 +207,11 @@
                         <td th:text="${transaction.transactionAmount}"></td>
                         <td>
                             <button th:id="'flagBtn_' + ${transaction.paymentId}"
-                                th:class="${transaction.flagged ? 'btn btn-flag disabled' : 'btn btn-flag'}"
-                                th:disabled="${transaction.flagged}"
-                                th:text="'Flag'"
-                                th:onclick="'flagTransaction(' + ${transaction.paymentId} + ')'" style="cursor: pointer;">
+                                    th:class="${transaction.flagged ? 'btn btn-flag disabled' : 'btn btn-flag'}"
+                                    th:disabled="${transaction.flagged}"
+                                    th:onclick="'openFlagModal(' + ${transaction.paymentId} + ')'"
+                                    style="cursor: pointer;">
+                                Flag
                             </button>
                         </td>
                     </tr>
@@ -209,43 +219,61 @@
             </table>
         </div>
     </main>
-    <!-- Bootstrap JS -->
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Function to flag a transaction
-        function flagTransaction(paymentId) {
+        let currentPaymentId = null;
+        const flagReasonModal = new bootstrap.Modal(document.getElementById('flagReasonModal'));
+
+        function openFlagModal(paymentId) {
+            currentPaymentId = paymentId;
+            document.getElementById('flagReason').value = '';
+            flagReasonModal.show();
+        }
+
+        document.getElementById('submitFlagReason').addEventListener('click', function() {
+            const reason = document.getElementById('flagReason').value.trim();
+            if (!reason) {
+                alert('Please provide a reason for flagging.');
+                return;
+            }
+            flagTransaction(currentPaymentId, reason);
+        });
+
+        function flagTransaction(paymentId, reason) {
             const button = document.getElementById(`flagBtn_${paymentId}`);
-            // Send an AJAX request to the server to flag the transaction
+            
             fetch('/flag-transaction', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ paymentId })
+                body: JSON.stringify({ 
+                    paymentId: paymentId,
+                    flagReason: reason
+                })
             })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed to flag transaction');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    // Disable the button and update its appearance
-                    button.disabled = true;
-                    button.classList.add('disabled');
-                    alert('Transaction flagged successfully.');
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred while flagging the transaction.');
-                });
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to flag transaction');
+                }
+                return response.json();
+            })
+            .then(data => {
+                button.disabled = true;
+                button.classList.add('disabled');
+                flagReasonModal.hide();
+                alert('Transaction flagged successfully.');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while flagging the transaction.');
+            });
         }
 
-        // Function to reset filters and reload the page
         function resetFilters() {
-            window.location.href = '/admin-txn'; // Reload without filters
+            window.location.href = '/admin-txn';
         }
     </script>
 </body>
-
 </html>

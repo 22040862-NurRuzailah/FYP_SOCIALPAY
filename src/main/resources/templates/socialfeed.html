@@ -1,16 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-This code defines the styles for the header, navigation buttons, feed container, post cards, comments section, and other
-UI elements of the social feed page. It includes styles for the layout, colors, typography, and interactive behaviors of
-the various components. The styles are defined using CSS and are applied to the HTML elements in the corresponding
-Thymeleaf template.
-
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Social Feed</title>
 	<style>
+		/* Add your existing CSS styles here */
 		body {
 			font-family: Arial, sans-serif;
 			margin: 0;
@@ -27,7 +23,6 @@ Thymeleaf template.
 			box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
 			display: flex;
 			justify-content: space-between;
-			/* Space between logo and nav-buttons */
 			align-items: center;
 			z-index: 1000;
 		}
@@ -42,7 +37,6 @@ Thymeleaf template.
 			gap: 25px;
 			align-items: center;
 			margin: 0 auto;
-			/* Center nav-buttons */
 		}
 
 		.nav-button {
@@ -182,7 +176,6 @@ Thymeleaf template.
 			background-color: rgba(0, 0, 0, 0.05);
 		}
 
-		/* Comments Section */
 		.comments-section {
 			margin-top: 12px;
 			border-top: 1px solid #ddd;
@@ -193,30 +186,22 @@ Thymeleaf template.
 		.comment-input-container {
 			display: flex;
 			gap: 10px;
-			/* Space between profile picture and input wrapper */
 			margin-bottom: 15px;
 			align-items: flex-end;
-			/* Align items to the bottom */
 		}
 
 		.comment-input-wrapper {
 			flex-grow: 1;
-			/* Allow the wrapper to take up remaining space */
 			position: relative;
 			display: flex;
 			gap: 8px;
-			/* Space between textarea and send button */
 			align-items: flex-end;
-			/* Align items to the bottom */
 		}
 
 		.comment-input {
 			width: 100%;
-			/* Take up full width */
 			min-height: 36px;
-			/* Minimum height */
 			max-height: 120px;
-			/* Maximum height */
 			padding: 8px 12px;
 			border: 1px solid #ddd;
 			border-radius: 20px;
@@ -224,12 +209,9 @@ Thymeleaf template.
 			outline: none;
 			transition: border-color 0.2s;
 			resize: none;
-			/* Disable manual resizing */
 			overflow-y: hidden;
-			/* Hide scrollbar */
 			line-height: 1.4;
 			box-sizing: border-box;
-			/* Ensure padding doesn't break layout */
 		}
 
 		.comment-input:focus {
@@ -245,13 +227,10 @@ Thymeleaf template.
 			padding: 8px;
 			display: flex;
 			align-items: center;
-			/* Center the SVG vertically */
 			justify-content: center;
-			/* Center the SVG horizontally */
 			border-radius: 50%;
 			transition: background-color 0.2s;
 			flex-shrink: 0;
-			/* Prevent button from shrinking */
 		}
 
 		.send-comment-btn:hover {
@@ -311,6 +290,35 @@ Thymeleaf template.
 
 		.comment-action:hover {
 			text-decoration: underline;
+		}
+
+		.edit-post-button {
+			background: none;
+			border: none;
+			cursor: pointer;
+			padding: 0;
+			margin-left: 10px;
+		}
+
+		.edit-post-button svg {
+			width: 16px;
+			height: 16px;
+			fill: #65676b;
+		}
+
+		.edit-post-button:hover svg {
+			fill: #1877f2;
+		}
+
+		.overlay {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0, 0, 0, 0.5);
+			z-index: 1000;
+			display: none;
 		}
 
 		.floating-create-post {
@@ -431,6 +439,32 @@ Thymeleaf template.
 			/* Darker blue on hover */
 		}
 
+		.image-upload {
+			margin-bottom: 15px;
+		}
+
+		.image-upload label {
+			display: block;
+			margin-bottom: 5px;
+			font-weight: bold;
+			color: #555;
+		}
+
+		.btn-post {
+			width: 100%;
+			padding: 10px;
+			background-color: #3498db;
+			color: white;
+			border: none;
+			border-radius: 5px;
+			font-size: 16px;
+			cursor: pointer;
+		}
+
+		.btn-post:hover {
+			background-color: #2980b9;
+		}
+
 		.sidebar {
 			position: fixed;
 			top: 80px;
@@ -444,58 +478,333 @@ Thymeleaf template.
 			padding: 20px;
 		}
 
+		/* General Profile Card Styling */
+		.sidebar {
+			width: 300px;
+			margin: 20px auto;
+			font-family: Arial, sans-serif;
+		}
+
 		.profile-card {
+			background-color: #ffffff;
+			border-radius: 10px;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+			padding: 20px;
 			text-align: center;
 		}
 
-		.profile-card img {
-			width: 80px;
-			height: 80px;
+		/* Profile Picture */
+		.profile-picture {
+			width: 100px;
+			height: 100px;
 			border-radius: 50%;
+			object-fit: cover;
+			margin: 0 auto 15px;
+			border: 2px solid #0070ba;
+			/* Blue border */
+		}
+
+		/* Profile Name */
+		.profile-name {
+			font-size: 20px;
+			font-weight: bold;
+			color: #333333;
+			margin-bottom: 5px;
+		}
+
+		/* Profile Email */
+		.profile-email {
+			font-size: 14px;
+			color: #666666;
 			margin-bottom: 15px;
 		}
 
-		.profile-card h3 {
-			margin: 0;
-			font-size: 18px;
-			color: #050505;
-		}
-
-		.profile-card p {
-			margin: 5px 0;
-			font-size: 14px;
-			color: #65676b;
-		}
-
-		.profile-actions {
+		/* PayPal Section */
+		.paypal-section {
 			display: flex;
-			gap: 10px;
+			align-items: center;
+			justify-content: center;
+			margin-bottom: 15px;
+		}
+
+		.paypal-logo {
+			width: 24px;
+			height: 24px;
+			margin-right: 8px;
+		}
+
+		.paypal-account {
+			font-size: 14px;
+			color: #0070ba;
+			/* Blue text for PayPal account */
+			font-weight: 500;
+		}
+
+		.link-paypal-button {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background-color: #0070ba;
+			/* PayPal blue */
+			color: white;
+			border: none;
+			border-radius: 5px;
+			padding: 8px 12px;
+			font-size: 14px;
+			cursor: pointer;
+			transition: background-color 0.3s ease;
+		}
+
+		.link-paypal-button:hover {
+			background-color: #005c9d;
+			/* Darker PayPal blue */
+		}
+
+		/* Action Buttons */
+		.action-button {
+			display: block;
+			width: 100%;
+			background-color: #0070ba;
+			/* Blue theme */
+			color: white;
+			border: none;
+			border-radius: 5px;
+			padding: 10px;
+			font-size: 14px;
+			margin: 5px 0;
+			cursor: pointer;
+			transition: background-color 0.3s ease;
+		}
+
+		.action-button:hover {
+			background-color: #005c9d;
+			/* Darker blue on hover */
+		}
+
+		/* Account Actions and Posts Action */
+		.account-actions,
+		.posts-action {
 			margin-top: 15px;
 		}
 
-		.profile-actions button {
-			flex: 1;
-			padding: 8px 12px;
-			border-radius: 4px;
+		/* Modal Background */
+		.modal {
+			display: none;
+			/* Hidden by default */
+			position: fixed;
+			z-index: 1000;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0, 0, 0, 0.5);
+			/* Semi-transparent background */
+		}
+
+		/* Modal Content */
+		.modal-content {
+			background-color: #fff;
+			margin: 5% auto;
+			padding: 30px;
 			border: none;
-			font-weight: 600;
+			width: 400px;
+			border-radius: 8px;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+			text-align: center;
+		}
+
+		/* PayPal Header */
+		.paypal-header {
+			margin-bottom: 20px;
+		}
+
+		.paypal-header img {
+			width: 60px;
+			margin-bottom: 10px;
+		}
+
+		.paypal-header h2 {
+			font-size: 24px;
+			font-weight: bold;
+			color: #333;
+			margin: 0;
+		}
+
+		/* Close Button */
+		.close {
+			position: absolute;
+			top: 10px;
+			right: 15px;
+			color: #aaa;
+			font-size: 28px;
+			font-weight: bold;
 			cursor: pointer;
-			transition: all 0.2s ease;
 		}
 
-		.profile-actions button.follow {
-			background-color: #1877f2;
+		.close:hover,
+		.close:focus {
+			color: #000;
+			text-decoration: none;
+		}
+
+		/* Input Groups */
+		.input-group {
+			margin-bottom: 20px;
+			text-align: left;
+		}
+
+		.input-group label {
+			font-size: 14px;
+			font-weight: bold;
+			color: #333;
+			display: block;
+			margin-bottom: 5px;
+		}
+
+		.input-group input {
+			width: 100%;
+			padding: 10px;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+			font-size: 16px;
+			box-sizing: border-box;
+		}
+
+		.forgot-password {
+			display: block;
+			margin-top: 5px;
+			font-size: 14px;
+			color: #0070ba;
+			text-decoration: none;
+		}
+
+		.forgot-password:hover {
+			text-decoration: underline;
+		}
+
+		/* Submit Button */
+		.paypal-submit-button {
+			width: 100%;
+			padding: 12px;
+			background-color: #0070ba;
 			color: white;
+			border: none;
+			border-radius: 4px;
+			font-size: 16px;
+			font-weight: bold;
+			cursor: pointer;
+			transition: background-color 0.3s ease;
 		}
 
-		.profile-actions button.message {
-			background-color: #e4e6eb;
-			color: #050505;
+		.paypal-submit-button:hover {
+			background-color: #005ea2;
 		}
 
-		.profile-actions button:hover {
-			opacity: 0.9;
-			transform: translateY(-1px);
+		/* Footer Links */
+		.paypal-footer {
+			margin-top: 20px;
+			font-size: 14px;
+			color: #666;
+		}
+
+		.paypal-footer a {
+			color: #0070ba;
+			text-decoration: none;
+		}
+
+		.paypal-footer a:hover {
+			text-decoration: underline;
+		}
+
+		.report-modal-container {
+			display: none;
+			/* Hidden by default */
+			position: fixed;
+			z-index: 1000;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0, 0, 0, 0.5);
+		}
+
+		.report-modal-container.active {
+			display: block !important;
+		}
+
+		/* Modal Content */
+		.report-modal-content {
+			background-color: #fff;
+			margin: 10% auto;
+			padding: 20px;
+			border: 1px solid #888;
+			width: 400px;
+			border-radius: 8px;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+			text-align: center;
+			position: relative;
+			/* Needed for positioning the close button */
+		}
+
+		/* Close Button */
+		.report-close {
+			color: #aaa;
+			font-size: 28px;
+			font-weight: bold;
+			cursor: pointer;
+			position: absolute;
+			top: 10px;
+			right: 15px;
+		}
+
+		.report-close:hover,
+		.report-close:focus {
+			color: black;
+			text-decoration: none;
+		}
+
+		/* Input Groups */
+		.report-input-group {
+			margin-bottom: 20px;
+			text-align: left;
+		}
+
+		.report-input-group label {
+			font-size: 14px;
+			font-weight: bold;
+			color: #333;
+			display: block;
+			margin-bottom: 5px;
+		}
+
+		.report-input-group textarea {
+			width: 100%;
+			padding: 10px;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+			font-size: 16px;
+			box-sizing: border-box;
+			resize: vertical;
+			min-height: 100px;
+		}
+
+		/* Submit Button */
+		.report-submit-button {
+			width: 100%;
+			padding: 12px;
+			background-color: #ff4d4d;
+			/* Red color for reporting */
+			color: white;
+			border: none;
+			border-radius: 4px;
+			font-size: 16px;
+			font-weight: bold;
+			cursor: pointer;
+			transition: background-color 0.3s ease;
+		}
+
+		.report-submit-button:hover {
+			background-color: #e60000;
 		}
 	</style>
 </head>
@@ -538,6 +847,7 @@ Thymeleaf template.
 		</div>
 	</header>
 
+
 	<div class="overlay" id="create-post-overlay"></div>
 	<div class="create-post-popup" id="create-post-popup">
 		<form th:action="@{/posts/create}" method="post" enctype="multipart/form-data">
@@ -554,23 +864,75 @@ Thymeleaf template.
 
 	<div class="sidebar">
 		<div class="profile-card">
-			<img src="images/profile-pic.jpg" alt="John Smith">
-			<h3 th:text="${member.name}"></h3>
-			<p th:text="${member.email}"></p>
-			<div class="profile-actions">
-				<!-- <button class="follow">FOLLOW</button>
-				<button class="message">MESSAGE</button> -->
+
+			<!-- Username -->
+			<h3 th:text="${member.name}" class="profile-name"></h3>
+
+			<!-- Email -->
+			<p th:text="${member.email}" class="profile-email"></p>
+
+			<!-- PayPal Account or Link PayPal Account -->
+			<div class="paypal-section" th:if="${member.paypalAccount != null}">
+				<img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" alt="PayPal Logo" class="paypal-logo">
+				<span th:text="${member.paypalAccount}" class="paypal-account"></span>
 			</div>
+			<div class="paypal-section" th:if="${member.paypalAccount == null}">
+				<button class="link-paypal-button" onclick="openPayPalModal()">
+					<img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" alt="PayPal Logo"
+						class="paypal-logo">
+					<span>Link PayPal Account</span>
+				</button>
+			</div>
+			<div class="account-actions">
+				<button class="action-button change-email-button">Change Email</button>
+				<button class="action-button change-password-button">Change Password</button>
+			</div>
+			<div class="posts-action">
+				<button class="action-button your-posts-button" onclick="togglePostsView()">
+					<span th:text="${showingUserPosts == true ? 'Your Social Feed' : 'Your Posts'}">Your Posts</span>
+				</button>
+			</div>
+
+
 		</div>
 	</div>
 
-	<div class="feed-container">
-		<div th:each="post : ${posts}" class="post-card" th:data-post-id="${post.id}">
+	<!-- Edit Post Overlay -->
+	<div class="overlay" id="edit-post-overlay" onclick="closeEditPostModal()"></div>
+	<!-- 
+  
+   <div class="create-post-popup" id="edit-post-popup">
+        <form th:action="@{/posts/{id}/edit(id=${post.id})}" method="post" enctype="multipart/form-data">
+            <h3>Edit Post</h3>
+            <input id="edit-post-title" name="title" type="text" placeholder="Title" required>
+            <textarea id="edit-post-content" name="content" placeholder="Content" rows="4" required></textarea>
+            <div class="image-upload">
+                <label for="edit-post-image">Image:</label>
+                <input type="file" id="edit-post-image" name="image" accept="image/*">
+            </div>
+            <button type="submit" class="btn-post">Save Changes</button>
+        </form>
+    </div> -->
+
+
+
+
+	<div th:if="${posts != null}" class="feed-container" style="margin-top: 80px;">
+		<div th:each="post : ${posts}" th:if="${post != null}" class="post-card">
 			<div class="post-header">
-				<img src="images/default-profile.png" alt="Profile" class="profile-pic">
+				<img src="images/user2.png" alt="Profile" class="profile-pic">
 				<div>
-					<h4 th:text="${post.member.name}">User Name</h4>
+					<!-- Hide your name if the post is yours -->
+					<h4 th:if="${post.member.id != member.id}" th:text="${post.member.name}">User Name</h4>
 					<small th:text="${#temporals.format(post.timestamp, 'dd MMM yyyy HH:mm')}">Timestamp</small>
+					<!-- Edit button (three dots) for your own posts -->
+					<button th:if="${post.member.id == member.id}" class="edit-post-button"
+						th:onclick="'openEditPostModal(' + ${post.id} + ')'">
+						<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+							<path
+								d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
+						</svg>
+					</button>
 				</div>
 			</div>
 			<div class="post-content">
@@ -578,11 +940,13 @@ Thymeleaf template.
 				<img th:if="${post.image != null}" th:src="@{'/post/image/' + ${post.id}}" alt="Post image">
 			</div>
 			<div class="post-actions">
-				<button>👍 Like</button>
+				<!-- Hide Like and Delete buttons for your own posts -->
+				<button th:if="${post.member.id != member.id}">👍 Like</button>
 				<button onclick="toggleComments(this)">🗨️ Comment</button>
-				<button>❌ Report</button>
+				<button th:if="${post.member.id != member.id}" th:onclick="'openReportModal(' + ${post.id} + ')'">
+					❌ Report
+				</button>
 			</div>
-			<!-- New comments section -->
 			<!-- Comments section -->
 			<div class="comments-section">
 				<div class="comment-input-container">
@@ -599,7 +963,6 @@ Thymeleaf template.
 						</form>
 					</div>
 				</div>
-
 				<!-- Display existing comments -->
 				<div class="comments-list">
 					<div th:each="comment : ${post.comments}" class="comment">
@@ -610,91 +973,205 @@ Thymeleaf template.
 							</div>
 							<p class="comment-text" th:text="${comment.content}">Comment text</p>
 							<div class="comment-actions">
-								<span class="comment-action">Like</span>
-								<span class="comment-action">Reply</span>
 								<span class="comment-action"
-									th:text="${#temporals.format(comment.timestamp, 'dd MMM yyyy HH:mm')}">
-									Timestamp
-								</span>
+									th:text="${#temporals.format(comment.timestamp, 'dd MMM yyyy HH:mm')}">Timestamp</span>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+	</div>
 
+	<!-- The Modal -->
+	<div id="report-modal-container" class="report-modal-container">
+		<div class="report-modal-content">
+			<!-- Close Button -->
+			<span class="report-close" onclick="closeReportModal()">&times;</span>
+			<!-- Report Form -->
+			<form th:action="@{/posts/{id}/report(id=${postId})}" method="post" id="report-form">
+				<h2>Report Post</h2>
+				<div class="report-input-group">
+					<label for="reason">Reason for reporting:</label>
+					<textarea id="reason" name="reason" required placeholder="Enter your reason here"></textarea>
+				</div>
+				<button type="submit" class="report-submit-button">Report</button>
+			</form>
+		</div>
+	</div>
 
-		<button class="floating-create-post" onclick="showCreatePostPopup()">
-			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-				<path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
-			</svg>
-			Create Post
-		</button>
+	<div id="paypal-modal" class="modal">
+		<div class="modal-content">
+			<!-- PayPal Header -->
+			<div class="paypal-header">
+				<img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" alt="PayPal Logo" class="paypal-logo">
+				<h2>Log in to PayPal</h2>
+			</div>
 
-		<script>
-			function showCreatePostPopup() {
-				document.getElementById("create-post-overlay").style.display = "block";
-				document.getElementById("create-post-popup").style.display = "block";
+			<!-- Close Button -->
+			<span class="close" onclick="closePayPalModal()">&times;</span>
+
+			<!-- Login Form -->
+			<form th:action="@{/linkPayPal}" method="post" id="paypal-login-form">
+				<div class="input-group">
+					<label for="email">Email or mobile number</label>
+					<input type="text" id="email" name="email" required placeholder="Email or mobile number">
+				</div>
+
+				<div class="input-group">
+					<label for="password">Password</label>
+					<input type="password" id="password" name="password" required placeholder="Password">
+				</div>
+
+				<button type="submit" class="paypal-submit-button">Link Account</button>
+			</form>
+		</div>
+	</div>
+
+	<button class="floating-create-post" onclick="showCreatePostPopup()">
+		<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+			<path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+		</svg>
+		Create Post
+	</button>
+
+	<script>
+		function openEditPostModal(postId) {
+			// Fetch the post data (you can use an API endpoint for this)
+			fetch(`/posts/${postId}`)
+				.then(response => response.json())
+				.then(post => {
+					// Populate the edit modal with the post data
+					document.getElementById("edit-post-title").value = post.title;
+					document.getElementById("edit-post-content").value = post.content;
+					document.getElementById("edit-post-image").src = post.image || "";
+
+					// Show the edit modal
+					document.getElementById("edit-post-overlay").style.display = "block";
+					document.getElementById("edit-post-popup").style.display = "block";
+				})
+				.catch(error => console.error("Error fetching post:", error));
+		}
+
+		function closeEditPostModal() {
+			document.getElementById("edit-post-overlay").style.display = "none";
+			document.getElementById("edit-post-popup").style.display = "none";
+		}
+
+		function toggleComments(button) {
+			const postCard = button.closest('.post-card');
+			const commentsSection = postCard.querySelector('.comments-section');
+
+			if (commentsSection.style.display === 'none' || commentsSection.style.display === '') {
+				commentsSection.style.display = 'block';
+			} else {
+				commentsSection.style.display = 'none';
 			}
+		}
 
-			function hideCreatePostPopup() {
-				document.getElementById("create-post-overlay").style.display = "none";
-				document.getElementById("create-post-popup").style.display = "none";
+		function autoResize(textarea) {
+			textarea.style.height = 'auto';
+			textarea.style.height = (textarea.scrollHeight) + 'px';
+		}
+
+		function togglePostsView() {
+			const currentUrl = new URL(window.location.href);
+			const isShowingUserPosts = currentUrl.searchParams.get('userPosts') === 'true';
+
+			if (isShowingUserPosts) {
+				window.location.href = '/socialfeed?userPosts=false';
+			} else {
+				window.location.href = '/socialfeed?userPosts=true';
 			}
+		}
+		function showCreatePostPopup() {
+			document.getElementById("create-post-overlay").style.display = "block";
+			document.getElementById("create-post-popup").style.display = "block";
+		}
+		function hideCreatePostPopup() {
+			document.getElementById("create-post-overlay").style.display = "none";
+			document.getElementById("create-post-popup").style.display = "none";
+		}
+		function showCreatePostPopup() {
+			document.getElementById("create-post-overlay").style.display = "block";
+			document.getElementById("create-post-popup").style.display = "block";
+		}
+		function hideCreatePostPopup() {
+			document.getElementById("create-post-overlay").style.display = "none";
+			document.getElementById("create-post-popup").style.display = "none";
+		}
+		document.getElementById("create-post-overlay").addEventListener('click', hideCreatePostPopup);
 
-			function showCreatePostPopup() {
-				document.getElementById("create-post-overlay").style.display = "block";
-				document.getElementById("create-post-popup").style.display = "block";
+		// Open the modal
+		function openPayPalModal() {
+			document.getElementById("paypal-modal").style.display = "block";
+		}
+
+		// Close the modal
+		function closePayPalModal() {
+			document.getElementById("paypal-modal").style.display = "none";
+		}
+
+		// Handle form submission
+		function handlePayPalLogin(event) {
+			event.preventDefault(); // Prevent actual form submission
+
+			// Get the email and password from the form
+			const email = document.getElementById("email").value;
+			const password = document.getElementById("password").value;
+
+			// Simulate a successful login
+			if (email && password) {
+				alert(`PayPal account linked successfully!\nEmail: ${email}`);
+				closePayPalModal();
+
+				// Simulate saving the PayPal email to the database
+				savePayPalAccount(email);
+			} else {
+				alert("Please enter both email and password.");
 			}
+		}
 
-			function hideCreatePostPopup() {
-				document.getElementById("create-post-overlay").style.display = "none";
-				document.getElementById("create-post-popup").style.display = "none";
+		// Simulate saving the PayPal account to the database
+		function savePayPalAccount(email) {
+			console.log(`Saving PayPal email to database: ${email}`);
+
+			// Update the UI to show the linked PayPal account
+			const paypalSection = document.querySelector('.paypal-section');
+			paypalSection.innerHTML = `
+        <img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" alt="PayPal Logo" class="paypal-logo">
+        <span class="paypal-account">${email}</span>
+    `;
+		}
+
+		let postId; // To store the ID of the post being reported
+
+		function openReportModal(postIdValue) {
+			// Update the form action with the correct post ID
+			const form = document.getElementById('report-form');
+			form.action = `/posts/${postIdValue}/report`;
+
+			// Show the modal
+			const modal = document.getElementById('report-modal-container');
+			modal.style.display = "block";
+		}
+
+		function closeReportModal() {
+			const modal = document.getElementById('report-modal-container');
+			modal.style.display = "none";
+		}
+
+		// Close modal when clicking outside of it
+		document.addEventListener('click', function (event) {
+			const modal = document.getElementById('report-modal-container');
+			const modalContent = document.querySelector('.report-modal-content');
+
+			// Check if the modal is open and the click is outside the modal content
+			if (modal && modal.classList.contains("active") && !modalContent.contains(event.target)) {
+				closeReportModal();
 			}
-
-			// New function for toggling comments
-			function toggleComments(button) {
-				const postCard = button.closest('.post-card');
-				const commentsSection = postCard.querySelector('.comments-section');
-
-				if (commentsSection.style.display === 'none' || commentsSection.style.display === '') {
-					commentsSection.style.display = 'block';
-				} else {
-					commentsSection.style.display = 'none';
-				}
-			}
-
-			function autoResize(textarea) {
-				textarea.style.height = 'auto'; // Reset height
-				textarea.style.height = (textarea.scrollHeight) + 'px';
-			}
-
-			function handleComment(button) {
-				// Empty function for now - will be implemented later
-				console.log('Comment submitted');
-			}
-
-			function autoResize(textarea) {
-				textarea.style.height = 'auto'; // Reset height
-				textarea.style.height = (textarea.scrollHeight) + 'px'; // Set height to fit content
-			}
-
-			function handleComment(button) {
-				const commentInput = button.closest('.comment-input-wrapper').querySelector('.comment-input');
-				const commentText = commentInput.value.trim();
-
-				if (commentText) {
-					console.log('Comment submitted:', commentText);
-					commentInput.value = '';
-					autoResize(commentInput);
-				} else {
-					console.log('Comment is empty');
-				}
-			}
-
-
-			document.getElementById("create-post-overlay").addEventListener('click', hideCreatePostPopup);
-		</script>
+		});
+	</script>
 </body>
 
 </html>

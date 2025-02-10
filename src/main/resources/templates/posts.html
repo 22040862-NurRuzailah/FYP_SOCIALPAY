@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Feed</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        /* Header Styling */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: #1877f2;
+            padding: 6px 20px;
+            box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+            margin: 0 auto;
+        }
+
+        .nav-button {
+            background: none;
+            border: none;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-button svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        /* Feed Container */
+        .feed-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            /* 4x4 Grid Layout */
+            gap: 20px;
+            /* Space between posts */
+            margin: 100px auto 20px;
+            /* Add top margin to avoid overlap with header */
+            max-width: 1200px;
+            /* Adjust as needed */
+        }
+
+        /* Post Card */
+        .post-card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            text-align: left;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .post-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Post Header */
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .post-header small {
+            font-size: 12px;
+            color: #666666;
+        }
+
+        .edit-menu {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .edit-menu svg {
+            width: 20px;
+            height: 20px;
+            fill: #666666;
+        }
+
+        .edit-options {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+
+        .edit-options button {
+            background: none;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 14px;
+            text-align: left;
+            width: 100%;
+        }
+
+        .edit-options button:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Post Content */
+        .post-content p {
+            font-size: 14px;
+            color: #333333;
+            margin-bottom: 10px;
+        }
+
+        .post-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        /* Post Actions */
+        .post-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+
+        .post-actions button {
+            background-color: transparent;
+            border: none;
+            color: #0070ba;
+            /* Blue theme */
+            font-size: 14px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .post-actions button:hover {
+            color: #005c9d;
+            /* Darker blue on hover */
+        }
+
+        /* Modal Styling */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 800px;
+            /* Larger modal */
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1001;
+            overflow-y: auto;
+            /* Make modal scrollable */
+            max-height: 90vh;
+            /* Limit height to 90% of viewport */
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 15px;
+            overflow-y: auto;
+            /* Ensure content inside modal is scrollable */
+            max-height: calc(90vh - 100px);
+            /* Adjust height for header and padding */
+        }
+
+        .comment-input-container {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .comment-input-container img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+
+        .comment-input-wrapper {
+            flex-grow: 1;
+            position: relative;
+        }
+
+        .comment-input {
+            width: 100%;
+            min-height: 40px;
+            padding: 8px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            resize: none;
+            font-size: 14px;
+        }
+
+        .send-comment-btn {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background-color: #0070ba;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .send-comment-btn:hover {
+            background-color: #005c9d;
+        }
+
+        .comments-list {
+            max-height: 400px;
+            /* Limit height for scrollable comments */
+            overflow-y: auto;
+            /* Enable scrolling */
+        }
+
+        .comments-list .comment {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .comments-list .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+
+        .comment-content {
+            flex-grow: 1;
+        }
+
+        .comment-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .comment-author {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333333;
+            margin-right: 10px;
+        }
+
+        .comment-text {
+            font-size: 14px;
+            color: #333333;
+            margin-bottom: 5px;
+        }
+
+        .comment-actions {
+            font-size: 12px;
+            color: #666666;
+        }
+
+        .comment-action {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .comment-action:hover {
+            text-decoration: underline;
+        }
+
+        /* Overlay for Modal */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <a href="/socialfeed">
+                <img src="images/splogo.png" alt="Logo">
+            </a>
+        </div>
+        <div class="nav-buttons">
+            <a href="/socialfeed" class="nav-button">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 2L2 12h3v8h6v-6h2v6h6v-8h3L12 2z" />
+                </svg>
+                Home
+            </a>
+            <a href="/add-friends" class="nav-button">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
+                </svg>
+                Network
+            </a>
+            <a href="/transactions" class="nav-button">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+                </svg>
+                Transactions
+            </a>
+            <a href="/notifications" class="nav-button">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" />
+                </svg>
+                Posts
+            </a>
+        </div>
+    </header>
+    <!-- Feed Container -->
+    <div class="feed-container">
+        <div th:if="${posts != null and not posts.empty}" th:each="post : ${posts}" class="post-card"
+            th:data-post-id="${post.id}">
+            <!-- Post Header -->
+            <div class="post-header">
+                <small th:text="${#temporals.format(post.timestamp, 'dd MMM yyyy HH:mm')}">Timestamp</small>
+                <div class="edit-menu">
+                    <svg viewBox="0 0 24 24" onclick="toggleEditMenu(this)">
+                        <path
+                            d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
+                    </svg>
+                    <div class="edit-options">
+                        <button>Edit</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Post Content -->
+            <div class="post-content">
+                <p th:text="${post.content}">Post Content</p>
+                <img th:if="${post.image != null}" th:src="@{'/post/image/' + ${post.id}}" alt="Post image"
+                    class="post-image">
+            </div>
+
+            <!-- Post Actions -->
+            <div class="post-actions">
+                <button onclick="openCommentModal(this)">🗨️ Comment</button>
+            </div>
+        </div>
+
+        <!-- Handle Empty Posts -->
+        <div th:if="${posts == null or posts.empty}">
+            <p>No posts available.</p>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="overlay" id="modalOverlay"></div>
+    <div class="modal" id="commentModal">
+        <div class="modal-header">
+            <h3>Comments</h3>
+            <button class="close-modal" onclick="closeCommentModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <!-- Comment Input -->
+            <div class="comment-input-container">
+                <img src="images/default-profile.png" alt="Your Profile">
+                <div class="comment-input-wrapper">
+                    <textarea name="content" class="comment-input" placeholder="Write a comment..."
+                        oninput="autoResize(this)"></textarea>
+                    <button type="submit" class="send-comment-btn" onclick="handleComment(this); return false;">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Display Existing Comments
+            <div class="comments-list" id="commentsList">
+                <div th:if="${post != null and post.comments != null}" th:each="comment : ${post.comments}"
+                    class="comment">
+                    <img src="images/default-profile.png" alt="Commenter Profile" class="profile-pic">
+                    <div class="comment-content">
+                        <div class="comment-header">
+                            <span class="comment-author" th:text="${comment.member.name}">User Name</span>
+                        </div>
+                        <p class="comment-text" th:text="${comment.content}">Comment text</p>
+                        <div class="comment-actions">
+                            <span class="comment-action">Like</span>
+                            <span class="comment-action">Reply</span>
+                            <span class="comment-action"
+                                th:text="${#temporals.format(comment.timestamp, 'dd MMM yyyy HH:mm')}">Timestamp</span>
+                        </div>
+                    </div>
+                </div>
+                <div th:if="${post == null or post.comments == null or post.comments.empty}">
+                    <p>No comments yet. Be the first to comment!</p>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+    <!-- JavaScript -->
+    <script>
+        // Toggle Edit Menu
+        function toggleEditMenu(button) {
+            const editOptions = button.nextElementSibling;
+            if (editOptions.style.display === 'none' || editOptions.style.display === '') {
+                editOptions.style.display = 'block';
+            } else {
+                editOptions.style.display = 'none';
+            }
+        }
+
+        // Auto Resize Textarea
+        function autoResize(textarea) {
+            textarea.style.height = 'auto'; // Reset height
+            textarea.style.height = (textarea.scrollHeight) + 'px'; // Set height to fit content
+        }
+
+        // Handle Comment Submission
+        function handleComment(button) {
+            const commentInput = button.closest('.comment-input-wrapper').querySelector('.comment-input');
+            const commentText = commentInput.value.trim();
+            if (commentText) {
+                console.log('Comment submitted:', commentText);
+
+                // Simulate adding the comment to the DOM (for demonstration purposes)
+                const commentsList = document.getElementById('commentsList');
+
+                const newComment = document.createElement('div');
+                newComment.classList.add('comment');
+                newComment.innerHTML = `
+                    <img src="images/default-profile.png" alt="Commenter Profile" class="profile-pic">
+                    <div class="comment-content">
+                        <div class="comment-header">
+                            <span class="comment-author">You</span>
+                        </div>
+                        <p class="comment-text">${commentText}</p>
+                        <div class="comment-actions">
+                            <span class="comment-action">Like</span>
+                            <span class="comment-action">Reply</span>
+                            <span class="comment-action">Just now</span>
+                        </div>
+                    </div>
+                `;
+                commentsList.appendChild(newComment);
+
+                // Clear the input field and reset its height
+                commentInput.value = '';
+                autoResize(commentInput);
+            } else {
+                console.log('Comment is empty');
+            }
+        }
+
+        // Open Comment Modal
+        function openCommentModal(button) {
+            const modal = document.getElementById('commentModal');
+            const overlay = document.getElementById('modalOverlay');
+            modal.style.display = 'block';
+            overlay.style.display = 'block';
+        }
+
+        // Close Comment Modal
+        function closeCommentModal() {
+            const modal = document.getElementById('commentModal');
+            const overlay = document.getElementById('modalOverlay');
+            modal.style.display = 'none';
+            overlay.style.display = 'none';
+        }
+    </script>
+</body>
+
+</html>
