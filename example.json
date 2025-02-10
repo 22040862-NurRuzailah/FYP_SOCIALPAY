@@ -1,0 +1,120 @@
+{
+    "id": "PAYID-M6PUZSY8RE62405HN800725B",
+    "intent": "sale",
+    "state": "approved",
+    "cart": "5A021539A9648484V",
+    "payer": {
+        "payment_method": "paypal",
+        "status": "VERIFIED",
+        "payer_info": {
+            "email": "vishnuNG@personal.example.com",
+            "first_name": "Vishnu",
+            "last_name": "Ng",
+            "payer_id": "SHLMH5W8Q5CP2",
+            "shipping_address": {
+                "recipient_name": "Ng Vishnu",
+                "line1": "123 Thomson Rd.",
+                "city": "Singapore",
+                "state": "",
+                "postal_code": "308123",
+                "country_code": "SG"
+            },
+            "country_code": "SG"
+        }
+    },
+    "transactions": [
+        {
+            "amount": {
+                "total": "23.00",
+                "currency": "USD",
+                "details": {
+                    "subtotal": "23.00",
+                    "shipping": "0.00",
+                    "insurance": "0.00",
+                    "handling_fee": "0.00",
+                    "shipping_discount": "0.00",
+                    "discount": "0.00"
+                }
+            },
+            "payee": {
+                "merchant_id": "WTQMM44KGMKTU",
+                "email": "karenlim@personal.example.com"
+            },
+            "description": "Payment transaction",
+            "soft_descriptor": "PAYPAL *KARENLIM",
+            "item_list": {
+                "shipping_address": {
+                    "recipient_name": "Ng Vishnu",
+                    "line1": "123 Thomson Rd.",
+                    "city": "Singapore",
+                    "state": "",
+                    "postal_code": "308123",
+                    "country_code": "SG"
+                }
+            },
+            "related_resources": [
+                {
+                    "sale": {
+                        "id": "4DV80021NE524101H",
+                        "state": "completed",
+                        "amount": {
+                            "total": "23.00",
+                            "currency": "USD",
+                            "details": {
+                                "subtotal": "23.00",
+                                "shipping": "0.00",
+                                "insurance": "0.00",
+                                "handling_fee": "0.00",
+                                "shipping_discount": "0.00",
+                                "discount": "0.00"
+                            }
+                        },
+                        "payment_mode": "INSTANT_TRANSFER",
+                        "protection_eligibility": "ELIGIBLE",
+                        "protection_eligibility_type": "ITEM_NOT_RECEIVED_ELIGIBLE,UNAUTHORIZED_PAYMENT_ELIGIBLE",
+                        "transaction_fee": {
+                            "value": "1.08",
+                            "currency": "USD"
+                        },
+                        "receivable_amount": {
+                            "value": "28.78",
+                            "currency": "SGD"
+                        },
+                        "exchange_rate": "1.31274975",
+                        "parent_payment": "PAYID-M6PUZSY8RE62405HN800725B",
+                        "create_time": "2025-02-02T10:45:57Z",
+                        "update_time": "2025-02-02T10:45:57Z",
+                        "links": [
+                            {
+                                "href": "https://api.sandbox.paypal.com/v1/payments/sale/4DV80021NE524101H",
+                                "rel": "self",
+                                "method": "GET"
+                            },
+                            {
+                                "href": "https://api.sandbox.paypal.com/v1/payments/sale/4DV80021NE524101H/refund",
+                                "rel": "refund",
+                                "method": "POST"
+                            },
+                            {
+                                "href": "https://api.sandbox.paypal.com/v1/payments/payment/PAYID-M6PUZSY8RE62405HN800725B",
+                                "rel": "parent_payment",
+                                "method": "GET"
+                            }
+                        ],
+                        "soft_descriptor": "PAYPAL *KARENLIM"
+                    }
+                }
+            ]
+        }
+    ],
+    "failed_transactions": [],
+    "create_time": "2025-02-02T10:45:30Z",
+    "update_time": "2025-02-02T10:45:57Z",
+    "links": [
+        {
+            "href": "https://api.sandbox.paypal.com/v1/payments/payment/PAYID-M6PUZSY8RE62405HN800725B",
+            "rel": "self",
+            "method": "GET"
+        }
+    ]
+}
