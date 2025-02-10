@@ -3,6 +3,7 @@ package c300.ruzailah.fyp;
 import java.security.Principal;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Map;
@@ -33,6 +34,10 @@ public class MemberController {
 
     @Autowired
     private EmailService emailService;
+
+
+    @Autowired
+    private TransactionRepository transactionRepository;
 
     @PostMapping("/signup")
     public String registerUser(@ModelAttribute("member") Member member, RedirectAttributes redirectAttributes) {
@@ -167,6 +172,20 @@ public class MemberController {
         memberRepository.save(member);
         return "redirect:/admin-landing";
     }
+
+
+    @GetMapping("/user-transaction")
+    public String showTransactionPage(Principal principal, Model model) {
+        Member member = memberRepository.findByEmail(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<Transaction> transactions = transactionRepository.findByUserID(member.getId());
+
+        model.addAttribute("transactions", transactions);
+        return "user-transaction";
+
+    }
+
 }
 
 

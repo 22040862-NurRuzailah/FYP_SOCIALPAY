@@ -35,6 +35,19 @@ public class PostService {
         return postRepository.save(post);
     }
 
+
+    public Post editPost(Long postid, String title, String content, MultipartFile imageFile) {
+        Post post = postRepository.findById(postid).get();
+        post.setTitle(title);
+        post.setContent(content);
+        try {
+            post.setImage(imageFile.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return postRepository.save(post);
+    }
+
     public void createComment(Post post, String content, Member member) {
         Comment comment = new Comment();
         comment.setContent(content);
