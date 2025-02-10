@@ -15,6 +15,12 @@ public class PostService {
     @Autowired
     private CommentRepository commentRepository;
 
+    @Autowired
+    private ReportedPostsRepository reportedPostsRepository;
+
+    @Autowired 
+    private NotificationRepository notificationRepository;
+
     public Post createPost(String title, String content, MultipartFile imageFile, Member member) throws IOException {
         Post post = new Post();
         post.setTitle(title);
@@ -48,11 +54,19 @@ public class PostService {
     }
 
 
-    public void reportPost(long id) {
+    public void reportPost(long id, String reason) {
         Post post = postRepository.findById(id).orElse(null);
         if (post != null) {
-            post.setReported(true);
+            post.setReportedCount(post.getReportedCount() + 1);
             postRepository.save(post);
+            ReportedPosts reportedPost = new ReportedPosts();
+            reportedPost.setPost(post);
+            reportedPost.setReason(reason);
+            reportedPostsRepository.save(reportedPost);
+
+            Notification notification = new Notification();
+            notification.setMessage("Post ID " + post.getId() + " has been reported for reason: " + "(" +reason + ")");
+            notificationRepository.save(notification);
         }
     }
 }

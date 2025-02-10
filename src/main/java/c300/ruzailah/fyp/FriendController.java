@@ -73,10 +73,7 @@ public class FriendController {
             Principal principal,
             RedirectAttributes redirectAttributes) {
         try {
-            // Extract the current user
             Member currentMember = getCurrentMember(principal);
-
-            // Extract the email of the receiver from the request body
             String email = requestBody.get("email");
 
             if (email == null || email.isEmpty()) {
@@ -89,10 +86,27 @@ public class FriendController {
             Optional<Member> receiver = memberRepository.findByEmail(email);
 
             if (receiver.isPresent()) {
-                // Send the friend request
-                friendService.sendFriendRequests(currentMember.getId(), receiver.get().getId());
-                redirectAttributes.addFlashAttribute("message", "Friend request sent successfully!");
-                redirectAttributes.addFlashAttribute("success", true);
+                Member receiverMember = receiver.get();
+
+                // Check if already friends, or if a friend request has been sent/received
+                if (currentMember.getFriends().contains(receiverMember) ||
+                        currentMember.getSentRequests().stream()
+                                .anyMatch(request -> request.getReceiver().equals(receiverMember) &&
+                                        request.getStatus() == FriendRequest.FriendRequestStatus.PENDING)
+                        ||
+                        currentMember.getReceivedRequests().stream()
+                                .anyMatch(request -> request.getSender().equals(receiverMember) &&
+                                        request.getStatus() == FriendRequest.FriendRequestStatus.PENDING)) {
+
+                    redirectAttributes.addFlashAttribute("message",
+                            "You are already friends with this user or a friend request is pending.");
+                    redirectAttributes.addFlashAttribute("success", false);
+                } else {
+                    // If no conflicts, send the friend request
+                    friendService.sendFriendRequests(currentMember.getId(), receiverMember.getId());
+                    redirectAttributes.addFlashAttribute("message", "Friend request sent successfully!");
+                    redirectAttributes.addFlashAttribute("success", true);
+                }
             } else {
                 redirectAttributes.addFlashAttribute("message", "User not found.");
                 redirectAttributes.addFlashAttribute("success", false);
@@ -101,7 +115,6 @@ public class FriendController {
             redirectAttributes.addFlashAttribute("message", "An error occurred: " + e.getMessage());
             redirectAttributes.addFlashAttribute("success", false);
         }
-
         return new RedirectView("/add-friends");
     }
 

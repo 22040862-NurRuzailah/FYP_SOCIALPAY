@@ -10,6 +10,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Column;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -26,7 +27,9 @@ public class Post {
 
     private long likes;
 
-    private boolean reported;
+    private long reportedCount;
+
+    private boolean isDisabled = false;
 
     @Lob
     @Column(length = 1000000) 
@@ -39,22 +42,41 @@ public class Post {
     private Member member;
 
     @OneToMany(mappedBy = "post")
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post")
+    private List<ReportedPosts> reportedPosts = new ArrayList<>();
 
 
-
-    public boolean isReported() {
-        return this.reported;
+    public boolean isDisabled() {
+        return this.isDisabled;
     }
 
-    public boolean getReported() {
-        return this.reported;
+    public boolean getIsDisabled() {
+        return this.isDisabled;
     }
 
-    public void setReported(boolean reported) {
-        this.reported = reported;
+    public void setDisabled(boolean isDisabled) {
+        this.isDisabled = isDisabled;
     }
 
+
+    public List<ReportedPosts> getReportedPosts() {
+        return this.reportedPosts;
+    }
+
+    public void setReportedPosts(List<ReportedPosts> reportedPosts) {
+        this.reportedPosts = reportedPosts;
+    }
+
+
+    public long getReportedCount() {
+        return this.reportedCount;
+    }
+
+    public void setReportedCount(long reportedCount) {
+        this.reportedCount = reportedCount;
+    }
 
 
     public Long getId() {

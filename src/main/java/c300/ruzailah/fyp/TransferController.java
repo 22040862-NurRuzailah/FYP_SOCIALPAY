@@ -74,7 +74,6 @@ public class TransferController {
                 recipientEmail
             );
             
-            // Ensure we're returning the correct response format
             return ResponseEntity.ok(paymentResponse.toMap());
             
         } catch (IOException e) {

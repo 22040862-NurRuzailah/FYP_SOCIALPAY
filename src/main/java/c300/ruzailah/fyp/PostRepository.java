@@ -14,4 +14,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("SELECT p FROM Post p WHERE p.member IN " +
             "(SELECT f FROM Member m JOIN m.friends f WHERE m.id = :memberId) ORDER BY p.timestamp DESC")
     List<Post> findPostsByFriends(Long memberId);
+
+    List<Post> findByMemberId(Long memberId);
 }

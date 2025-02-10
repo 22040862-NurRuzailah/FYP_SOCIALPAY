@@ -39,6 +39,21 @@ public class Transaction {
 
     private Long recieverID;
 
+    @Column(name = "reported", nullable = false)
+    private Boolean reported = false;
+
+    public Boolean isReported() {
+        return this.reported;
+    }
+
+    public Boolean getReported() {
+        return this.reported;
+    }
+
+    public void setReported(Boolean reported) {
+        this.reported = reported;
+    }
+
     public Long getRecieverID() {
         return this.recieverID;
     }

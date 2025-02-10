@@ -3,7 +3,9 @@ package c300.ruzailah.fyp;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,21 +33,37 @@ public class PostController {
     @Autowired
     private PostRepository postRepository;
 
-    @GetMapping("/socialfeed")
-    public String socialFeed(Principal principal,Model model) {
-        String email  = principal.getName();
-        Optional<Member> member = memberRepository.findByEmail(email);
-        List<Post> posts = postRepository.findPostsByFriends(member.get().getId());
-        List<Post> returnedPosts = new ArrayList<>();
-        for (Post post : posts)    {
-            if (post.getMember().getId() != member.get().getId()) {
-                returnedPosts.add(post);
+    @Autowired
+    private ReportedPostsRepository reportedPostsRepository;
+
+    @Controller
+    public class SocialFeedController {
+        
+        @GetMapping("/socialfeed")
+        public String socialFeed(Principal principal, Model model, 
+                @RequestParam(required = false, defaultValue = "false") Boolean userPosts) {
+            String email = principal.getName();
+            Optional<Member> member = memberRepository.findByEmail(email);
+            List<Post> posts;
+            
+            if (userPosts) {
+                // Get only user's posts
+                posts = postRepository.findByMemberId(member.get().getId());
+            } else {
+                // Get social feed posts
+                posts = postRepository.findPostsByFriends(member.get().getId());
+                posts = posts.stream()
+                        .filter(post -> post.getMember().getId() != member.get().getId())
+                        .collect(Collectors.toList());
             }
+            
+            model.addAttribute("posts", posts);
+            model.addAttribute("member", member.get());
+            model.addAttribute("showingUserPosts", userPosts);
+            return "socialfeed";
         }
-        model.addAttribute("posts", posts);
-        model.addAttribute("member", member.get());
-        return "socialfeed";
-    }
+        
+    
 
     @GetMapping("/post/image/{id}")
     @ResponseBody
@@ -102,10 +120,33 @@ public class PostController {
         }
     }
 
-
     @PostMapping("/posts/{id}/report")
-    public String reportPost(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        postService.reportPost(id);
+    public String reportPost(@PathVariable Long id, @RequestParam("reason") String reason , RedirectAttributes redirectAttributes) {
+        postService.reportPost(id, reason);
         return "redirect:/socialfeed";
     }
+
+    @PostMapping("/posts/{id}/delete")
+    public String deletePost(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        Post post = postRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Post not found"));
+        post.setDisabled(true);
+        List<ReportedPosts> reportedPosts = reportedPostsRepository.findByPostId(id);
+        for (ReportedPosts reportedPost : reportedPosts) {
+            reportedPost.setPostDisabled(true);
+        }
+        return "redirect:/admin-landing";
+    }
+
+    @PostMapping("/reported-post/ignore-all/{postId}")
+    public String ignoreAllReports(@PathVariable Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
+        reportedPostsRepository.deleteAll(post.getReportedPosts());
+        post.setReportedCount(0);
+        postRepository.save(post);
+        return "redirect:/admin-landing";
+    }
+
+}
 }

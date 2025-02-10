@@ -26,6 +26,12 @@ public class TransactionService {
     @Autowired
     private TransactionRepository transactionRepository;
 
+    @Autowired
+    private NotificationRepository notificationRepository;
+
+    @Autowired
+    private MemberRepository memberRepository;
+
     public List<Transaction> getAllTransactions() {
         return transactionRepository.findAll();
     }
@@ -66,17 +72,25 @@ public class TransactionService {
         transactionRepository.save(transaction);
     }
 
-    public void flagTransaction(Long paymentId) {
+    public void flagTransaction(Long paymentId, String reason) {
         Transaction transaction = transactionRepository.findById(paymentId)
                 .orElseThrow(() -> new RuntimeException("Transaction not found"));
         transaction.setFlagged(true);
+        transaction.setFlaggedAutomatically(false);
+        transaction.setFlagReason(reason);
         transactionRepository.save(transaction);
+
+        Notification notification = new Notification();
+        notification.setMessage("Transaction ID " + paymentId + " flagged: " + reason);
+        notificationRepository.save(notification);
     }
 
     public void unflagTransaction(Long paymentId) {
         Transaction transaction = transactionRepository.findById(paymentId)
                 .orElseThrow(() -> new RuntimeException("Transaction not found"));
         transaction.setFlagged(false);
+        transaction.setFlaggedAutomatically(false);
+        transaction.setFlagReason(null);
         transactionRepository.save(transaction);
     }
 
@@ -85,6 +99,7 @@ public class TransactionService {
         transactionRepository.save(transaction);
         System.out.println("Transaction saved successfully"); // Add this line
         detectAndFlagSuspiciousTransaction(transaction);
+       
     }
     
 
@@ -105,6 +120,8 @@ public class TransactionService {
                 transaction.setFlaggedAutomatically(true);
                 transaction.setFlagReason("Suspicious transaction amount");
                 transactionRepository.save(transaction);
+                Notification notification = new Notification();
+                notification.setMessage("Suspicious transaction detected: " + transaction.getTransactionAmount() + " for user ID: " + transaction.getUserID());
             }
 
             else if (transaction.getIpAddress() != null && !check_ip_origin(transaction.getIpAddress())) {
@@ -112,6 +129,8 @@ public class TransactionService {
                 transaction.setFlaggedAutomatically(true);
                 transaction.setFlagReason("Suspicious IP address");
                 transactionRepository.save(transaction);
+                Notification notification = new Notification();
+                notification.setMessage("Suspicious IP address detected: " + transaction.getIpAddress() + " for user ID: " + transaction.getUserID());
             }
 
             // else if (!checkTransactionFrequency(transaction)) {
@@ -234,5 +253,26 @@ public class TransactionService {
         System.out.println("Scheduled task: Handling duplicate transactions");
         handleDuplicateTransactions();
     }
-}
 
+
+    @Scheduled(cron = "0 */5 * * * *") 
+    public void banUser() {
+        List<Member> members = memberRepository.findAll();
+
+        for (Member member : members) {
+            List<Transaction> flaggedTransactions = transactionRepository.findByUserID(member.getId())
+                    .stream()
+                    .filter(Transaction::isFlagged)
+                    .collect(Collectors.toList());
+
+            if (flaggedTransactions.size() > 3 && member.isEnabled()) {
+                member.setEnabled(false);
+                memberRepository.save(member);
+                System.out.println("User " + member.getId() + " has been banned.");
+                Notification notification = new Notification();
+                notification.setMessage("Account ID "+ member.getId() +" has been disabled due to multiple flagged transactions.");
+                notificationRepository.save(notification);
+            }
+        }
+    }
+}
