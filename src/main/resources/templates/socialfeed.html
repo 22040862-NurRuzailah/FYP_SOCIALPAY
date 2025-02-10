@@ -806,6 +806,39 @@
 		.report-submit-button:hover {
 			background-color: #e60000;
 		}
+
+		/* Modal Styling */
+		.modal.edit-modal {
+			display: none;
+			position: fixed;
+			z-index: 1000;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0, 0, 0, 0.5);
+		}
+
+		.modal.edit-modal .modal-content {
+			background-color: white;
+			margin: 10% auto;
+			padding: 20px;
+			border-radius: 8px;
+			width: 50%;
+			max-width: 600px;
+		}
+
+		.close.edit-close {
+			color: #aaa;
+			float: right;
+			font-size: 28px;
+			font-weight: bold;
+			cursor: pointer;
+		}
+
+		.close.edit-close:hover {
+			color: black;
+		}
 	</style>
 </head>
 
@@ -830,7 +863,7 @@
 				</svg>
 				Network
 			</a>
-			<a href="/transactions" class="nav-button">
+			<a href="/user-transaction" class="nav-button">
 				<svg viewBox="0 0 24 24">
 					<path
 						d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
@@ -897,42 +930,15 @@
 		</div>
 	</div>
 
-	<!-- Edit Post Overlay -->
-	<div class="overlay" id="edit-post-overlay" onclick="closeEditPostModal()"></div>
-	<!-- 
-  
-   <div class="create-post-popup" id="edit-post-popup">
-        <form th:action="@{/posts/{id}/edit(id=${post.id})}" method="post" enctype="multipart/form-data">
-            <h3>Edit Post</h3>
-            <input id="edit-post-title" name="title" type="text" placeholder="Title" required>
-            <textarea id="edit-post-content" name="content" placeholder="Content" rows="4" required></textarea>
-            <div class="image-upload">
-                <label for="edit-post-image">Image:</label>
-                <input type="file" id="edit-post-image" name="image" accept="image/*">
-            </div>
-            <button type="submit" class="btn-post">Save Changes</button>
-        </form>
-    </div> -->
-
-
-
-
 	<div th:if="${posts != null}" class="feed-container" style="margin-top: 80px;">
 		<div th:each="post : ${posts}" th:if="${post != null}" class="post-card">
 			<div class="post-header">
 				<img src="images/user2.png" alt="Profile" class="profile-pic">
 				<div>
-					<!-- Hide your name if the post is yours -->
+
 					<h4 th:if="${post.member.id != member.id}" th:text="${post.member.name}">User Name</h4>
 					<small th:text="${#temporals.format(post.timestamp, 'dd MMM yyyy HH:mm')}">Timestamp</small>
 					<!-- Edit button (three dots) for your own posts -->
-					<button th:if="${post.member.id == member.id}" class="edit-post-button"
-						th:onclick="'openEditPostModal(' + ${post.id} + ')'">
-						<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
-							<path
-								d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
-						</svg>
-					</button>
 				</div>
 			</div>
 			<div class="post-content">
@@ -943,9 +949,12 @@
 				<!-- Hide Like and Delete buttons for your own posts -->
 				<button th:if="${post.member.id != member.id}">👍 Like</button>
 				<button onclick="toggleComments(this)">🗨️ Comment</button>
-				<button th:if="${post.member.id != member.id}" th:onclick="'openReportModal(' + ${post.id} + ')'">
-					❌ Report
-				</button>
+				<button th:if="${post.member.id == member.id}" class="edit-button"
+					th:classappend="'edit-button-' + ${post.id}"
+					onclick="document.querySelector('.edit-modal-' + post.id).style.display='block'"> 📝 Edit </button>
+					<button th:if="${post.member.id != member.id}" th:onclick="'openReportModal(' + ${post.id} + ')'">
+						❌ Report
+					</button>
 			</div>
 			<!-- Comments section -->
 			<div class="comments-section">
@@ -1035,6 +1044,36 @@
 		Create Post
 	</button>
 
+	<!-- Edit Modal -->
+	<div th:each="post : ${posts}" class="modal edit-modal" th:classappend="'edit-modal-' + ${post.id}"
+		style="display: none;">
+		<div class="modal-content">
+			<!-- Close Button -->
+			<span class="close edit-close" th:classappend="'edit-close-' + ${post.id}"
+				th:onclick="|document.querySelector('.edit-modal-' + ${post.id}).style.display='none'|">
+				&times;
+			</span>
+
+
+			<h2>Edit Post</h2>
+			<form th:action="@{/posts/{id}/edit(id=${post.id})}" method="post" enctype="multipart/form-data">
+				<!-- Title Field -->
+				<label for="title">Title:</label>
+				<input type="text" name="title" th:value="${post.title}" required />
+
+				<!-- Content Field -->
+				<label for="content">Content:</label>
+				<textarea name="content" required th:text="${post.content}"></textarea>
+
+				<!-- Image Upload -->
+				<label for="image">Upload New Image:</label>
+				<input type="file" name="image" accept="image/*" />
+
+				<!-- Submit Button -->
+				<button type="submit">Save Changes</button>
+			</form>
+		</div>
+	</div>
 	<script>
 		function openEditPostModal(postId) {
 			// Fetch the post data (you can use an API endpoint for this)
