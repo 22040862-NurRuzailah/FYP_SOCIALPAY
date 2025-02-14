@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Friends Management</title>
+    <style>
+        /* General Reset */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        /* Header Styling */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: #1877f2;
+            padding: 6px 20px;
+            box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+            margin: 0 auto;
+        }
+
+        .nav-button {
+            background: none;
+            border: none;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-button svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        /* Main Content Styling */
+        .container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 80px;
+            /* Add space for the fixed header */
+            padding: 20px;
+        }
+
+        .column {
+            width: 30%;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        h2 {
+            color: #333333;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        .friend-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .friend-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .friend-card h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            color: #444444;
+        }
+
+        .friend-card p {
+            margin: 5px 0 0;
+            font-size: 0.9rem;
+            color: #777777;
+        }
+
+        .button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .accept-btn {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        .accept-btn:hover {
+            background-color: #45a049;
+        }
+
+        .reject-btn {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .reject-btn:hover {
+            background-color: #da190b;
+        }
+
+        .pending-btn {
+            background-color: #ff9800;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: default;
+        }
+
+        .unfriend-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .unfriend-btn:hover {
+            background-color: #c0392b;
+        }
+
+        .transfer-btn {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .transfer-btn:hover {
+            background-color: #2980b9;
+        }
+
+        /* Search Bar Styling */
+        .search-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .search-box {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .suggestions-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .suggestions-dropdown div {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+        }
+
+        .suggestions-dropdown div:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Modal Styling */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 300px;
+            text-align: center;
+        }
+
+        .modal-content input {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .modal-content button {
+            padding: 10px 15px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .modal-content .transfer-modal-btn {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .modal-content .cancel-modal-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1002;
+            backdrop-filter: blur(5px);
+        }
+
+        .loading-spinner-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .loading-spinner img {
+            width: 100px;
+            animation: spin 1s linear infinite;
+        }
+
+        .loading-spinner p {
+            margin-top: 10px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <a href="/socialfeed">
+                <img src="images/splogo.png" alt="Logo">
+            </a>
+        </div>
+        <div class="nav-buttons">
+            <a href="/socialfeed" class="nav-button">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3L2 12h3v8h5zm-6 0h2v-4H4v4zm16 0h2v-4h-2v4z" />
+                </svg>
+                Home
+            </a>
+            <a href="/add-friends" class="nav-button">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2c-4.41 0-8 3.59-8 8s3.59 8 8 8 8-3.59 8-8-3.59-8-8-8zm0 16c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zm0-10c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
+                </svg>
+                Network
+            </a>
+            <a href="/user-transaction" class="nav-button">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+                </svg>
+                Transactions
+            </a>
+            <a href="/analytics" class="nav-button">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M3 3v18h18V3H3zm16 16H5V5h14v14zM9 17H7v-2h2v2zm0-4H7v-2h2v2zm0-4H7V7h2v2zm6 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V7h2v2z" />
+                </svg>
+                Analytics
+            </a>
+            <a href="/logout" class="nav-button">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" />
+                </svg>
+                Logout
+            </a>
+        </div>
+    </header>
+
+    <div style="margin-top: 90px;"></div>
+    <div class="container">
+        <!-- Left Column: Friend Requests Received and Received Payment Requests -->
+        <div class="column">
+            <div class="section">
+                <h2>Friend Requests Received</h2>
+                <div class="friend-grid">
+                    <div th:each="request : ${receivedRequests}" class="friend-card">
+                        <div>
+                            <h3 th:text="${request.sender.name}"></h3>
+                            <p th:text="${request.sender.email}"></p>
+                        </div>
+                        <div>
+                            <form th:action="@{'/accept-friend-request/' + ${request.id}}" method="post"
+                                style="display: inline;">
+                                <button type="submit" class="button accept-btn">Accept</button>
+                            </form>
+                            <form th:action="@{'/reject-friend-request/' + ${request.id}}" method="post"
+                                style="display: inline;">
+                                <button type="submit" class="button reject-btn">Reject</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="section">
+                <h2>Received Payment Requests</h2>
+                <div class="friend-grid">
+                    <div th:each="request : ${receivedPaymentRequests}" class="friend-card">
+                        <div>
+                            <h3 th:text="${request.senderName}"></h3>
+                            <p>Amount: <span th:text="${request.amount}"></span></p>
+                            <p>Reason: <span th:text="${request.reason}"></span></p>
+                        </div>
+                        <div>
+                            <!-- Pay Button -->
+                            <button class="button accept-btn"
+                                th:attr="onclick='payPaymentRequest(\'' + ${request.id} + '\')'">
+                                Pay
+                            </button>
+            
+                            <!-- Decline Form -->
+                            <form th:action="@{/decline/{id}(id=${request.id})}" method="post" style="display: inline;">
+                                <button type="submit" class="button reject-btn">Decline</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Middle Column: Current Friends -->
+        <div class="column">
+            <div class="section">
+                <h2>My Friends</h2>
+                <div class="friend-grid">
+                    <div th:each="friend : ${friends}" class="friend-card">
+                        <div>
+                            <h3 th:text="${friend.name}"></h3>
+                            <p th:text="${friend.email}"></p>
+                        </div>
+                        <div>
+                            <form th:action="@{'/remove-friend/' + ${friend.id}}" method="post">
+                                <button class="button unfriend-btn">
+                                    Unfriend
+                                </button>
+                            </form>
+                            <div></div>
+                            <button th:data-email="${friend.paypalAccount}"
+                                onclick="openTransferModal(this.getAttribute('data-email'))"
+                                class="button transfer-btn">
+                                Transfer
+                            </button>
+                            <div></div>
+                            <button th:data-friend-id="${friend.id}"
+                                onclick="openRequestModal(this.getAttribute('data-friend-id'))"
+                                class="button transfer-btn">
+                                Request
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Sent Friend Requests and Sent Payment Requests -->
+        <div class="column">
+            <div class="section">
+                <h2>Find Friends</h2>
+                <div th:if="${message}" style="margin-bottom: 20px; padding: 10px; border-radius: 4px;"
+                    th:class="${success} ? 'success-message' : 'error-message'">
+                    <p th:text="${message}"></p>
+                </div>
+                <div class="search-container">
+                    <input type="text" id="searchBox" class="search-box" placeholder="Search by name or phone number">
+                    <div id="suggestionsDropdown" class="suggestions-dropdown"></div>
+                    <button id="sendFriendRequestButton" class="button" style="background-color: #28a745; color: white;"
+                        disabled>
+                        Send Friend Request
+                    </button>
+                </div>
+            </div>
+            <div class="section">
+                <h2>Sent Friend Requests</h2>
+                <div class="friend-grid">
+                    <div th:each="request : ${sentRequests}" class="friend-card">
+                        <div>
+                            <h3 th:text="${request.receiver.name}"></h3>
+                            <p th:text="${request.receiver.email}"></p>
+                        </div>
+                        <span class="button pending-btn">Pending</span>
+                    </div>
+                </div>
+            </div>
+            <div class="section">
+                <h2>Sent Payment Requests</h2>
+                <div class="friend-grid">
+                    <div th:each="request : ${sentPaymentRequests}" class="friend-card">
+                        <div>
+                            <h3 th:text="${request.recieverName}"></h3>
+                            <p>Amount: <span th:text="${request.amount}"></span></p>
+                            <p>Reason: <span th:text="${request.reason}"></span></p>
+                        </div>
+                        <span class="button pending-btn">Pending</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Transfer -->
+    <div id="transferModal" class="modal">
+        <div class="modal-content">
+            <h3>Enter Transfer Amount</h3>
+            <input type="number" id="transferAmount" placeholder="Amount" min="0" step="0.01">
+            <div>
+                <button class="transfer-modal-btn" onclick="confirmTransfer()">Transfer</button>
+                <button class="cancel-modal-btn" onclick="closeTransferModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="requestModal" class="modal">
+        <div class="modal-content">
+            <h3>Enter Request Amount</h3>
+            <form th:action="@{/send-payment-request/__${selectedFriendId}__}" method="post" id="paymentRequestForm">
+                <input type="number" name="amount" placeholder="Amount" min="0" step="0.01" required>
+                <h3>Enter Reason</h3>
+                <input type="text" name="reason" placeholder="Reason" required>
+                <div>
+                    <button type="submit" class="transfer-modal-btn">Send</button>
+                    <button type="button" class="cancel-modal-btn" onclick="closeRequestModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Loading Spinner -->
+    <div class="loading-spinner" id="loadingSpinner">
+        <div class="loading-spinner-content">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="Loading...">
+            <p>Loading...</p>
+        </div>
+    </div>
+
+    <script>
+        const searchBox = document.getElementById('searchBox');
+        const suggestionsDropdown = document.getElementById('suggestionsDropdown');
+        const sendFriendRequestButton = document.getElementById('sendFriendRequestButton');
+
+        let selectedEmail = null;
+
+        async function fetchSuggestions(query) {
+            if (!query) {
+                suggestionsDropdown.style.display = 'none';
+                return;
+            }
+
+            try {
+                const response = await fetch(`/friends/search?query=${encodeURIComponent(query)}`);
+                const data = await response.json();
+
+                suggestionsDropdown.innerHTML = '';
+                suggestionsDropdown.style.display = 'none';
+
+                if (data.length > 0) {
+                    data.forEach(item => {
+                        const suggestionDiv = document.createElement('div');
+                        suggestionDiv.textContent = `${item.name} (${item.email})`;
+                        suggestionDiv.addEventListener('click', () => {
+                            searchBox.value = item.name;
+                            selectedEmail = item.email;
+                            suggestionsDropdown.style.display = 'none';
+                            sendFriendRequestButton.disabled = false;
+                        });
+                        suggestionsDropdown.appendChild(suggestionDiv);
+                    });
+
+                    suggestionsDropdown.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error fetching suggestions:', error);
+            }
+        }
+
+        // Event listener for search box input
+        searchBox.addEventListener('input', (event) => {
+            const query = event.target.value.trim();
+            fetchSuggestions(query);
+
+            if (!query) {
+                sendFriendRequestButton.disabled = true;
+            }
+        });
+
+        // Event listener for sending friend request
+        sendFriendRequestButton.addEventListener('click', () => {
+            if (selectedEmail) {
+
+                fetch('/send-friend-request', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email: selectedEmail })
+                })
+                    .then(response => {
+                        if (response.redirected) {
+                            // Redirect to the URL provided by the backend
+                            window.location.href = response.url;
+                        } else {
+                            alert('An unexpected error occurred.');
+                        }
+                    })
+                    .catch(error => {
+                        alert('An error occurred while sending the friend request.');
+                    });
+            }
+        });
+
+        // Close the dropdown when clicking outside
+        document.addEventListener('click', (event) => {
+            if (!suggestionsDropdown.contains(event.target) && event.target !== searchBox) {
+                suggestionsDropdown.style.display = 'none';
+            }
+        });
+
+        let currentRecipientEmail = null;
+
+        function openTransferModal(recipientEmail) {
+            currentRecipientEmail = recipientEmail;
+            document.getElementById('transferModal').style.display = 'block';
+        }
+
+        function closeTransferModal() {
+            document.getElementById('transferModal').style.display = 'none';
+            document.getElementById('transferAmount').value = '';
+            document.getElementById('paymentRequestForm').reset();
+        }
+
+        function openRequestModal(friendId) {
+            if (!friendId || friendId === "null") {
+                alert("Invalid friend ID.");
+                return;
+            }
+
+            const form = document.getElementById('paymentRequestForm');
+            form.setAttribute('action', `/send-payment-request/${friendId}`);
+            document.getElementById('requestModal').style.display = 'block';
+        }
+
+        function closeRequestModal() {
+            document.getElementById('requestModal').style.display = 'none';
+            document.getElementById('transferAmount').value = '';
+        }
+
+        function confirmTransfer() {
+            const amount = document.getElementById('transferAmount').value;
+            if (amount && !isNaN(amount) && parseFloat(amount) > 0) {
+                // Show the loading spinner
+                document.getElementById('loadingSpinner').style.display = 'block';
+
+                // Simulate a 10-second delay before redirecting
+                setTimeout(() => {
+                    fetch(`/transfer/initiate?amount=${amount}&recipientEmail=${encodeURIComponent(currentRecipientEmail)}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.links) {
+                                const approvalUrl = data.links.find(link => link.rel === "approval_url").href;
+                                window.location.href = approvalUrl; // Redirect to PayPal for approval
+                            } else {
+                                alert("Failed to initiate payment: No approval URL found.");
+                            }
+                        })
+                        .catch(error => {
+                            alert("Failed to initiate payment: " + error.message);
+                        })
+                        .finally(() => {
+                            // Hide the loading spinner regardless of success or failure
+                            document.getElementById('loadingSpinner').style.display = 'none';
+                            closeTransferModal();
+                        });
+                }, 2000); // 10-second delay
+            } else {
+                alert("Invalid amount. Please enter a valid positive number.");
+            }
+        }
+
+        // Loading spinner functionality
+        function showLoadingSpinner() {
+            document.getElementById('loadingSpinner').style.display = 'block';
+        }
+
+        function hideLoadingSpinner() {
+            document.getElementById('loadingSpinner').style.display = 'none';
+        }
+
+
+        // Function to pay a payment request
+        function payPaymentRequest(requestId) {
+    showLoadingSpinner(); // Show loading spinner
+
+    fetch(`/transfer/fulfill-request?requestId=${requestId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.links) {
+            const approvalLink = data.links.find(link => link.rel === "approval_url");
+            if (approvalLink) {
+                window.location.href = approvalLink.href; // Redirect to PayPal for approval
+            } else {
+                throw new Error("No approval URL found.");
+            }
+        } else {
+            throw new Error("Invalid response format.");
+        }
+    })
+    .catch(error => {
+        alert("Failed to initiate payment: " + error.message);
+    })
+    .finally(() => {
+        // Hide the loading spinner
+        const spinner = document.getElementById('loadingSpinner');
+        if (spinner) {
+            spinner.style.display = 'none';
+        }
+        
+        // Close transfer modal if the function exists
+        if (typeof closeTransferModal === "function") {
+            closeTransferModal();
+        }
+    });
+}
+
+
+        // Function to decline a payment request
+        function declinePaymentRequest(requestId) {
+            if (confirm("Are you sure you want to decline this payment request?")) {
+                showLoadingSpinner(); // Show loading spinner
+
+                fetch(`/decline-payment-request/${requestId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.text();
+                        } else {
+                            throw new Error('Failed to decline payment request');
+                        }
+                    })
+                    .then(message => {
+                        alert(message); // Show success message
+                        location.reload(); // Refresh the page to update the list
+                    })
+                    .catch(error => {
+                        alert('Error: ' + error.message); // Show error message
+                    })
+                    .finally(() => {
+                        hideLoadingSpinner(); // Hide loading spinner
+                    });
+            }
+        }
+    </script>
+</body>
+
+</html>

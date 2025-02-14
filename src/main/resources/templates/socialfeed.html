@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Social Feed</title>
+	<link rel="stylesheet" type="text/css" href="/css/socialfeed.css">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+	<header>
+		<div class="logo">
+			<a href="/socialfeed">
+				<img src="images/splogo.png" alt="Logo">
+			</a>
+		</div>
+		<div class="nav-buttons">
+			<a href="/socialfeed" class="nav-button">
+				<svg viewBox="0 0 24 24" fill="currentColor">
+					<path d="M10 20v-6h4v6h5v-8h3L12 3L2 12h3v8h5zm-6 0h2v-4H4v4zm16 0h2v-4h-2v4z" />
+				</svg>
+				Home
+			</a>
+			<a href="/add-friends" class="nav-button">
+				<svg viewBox="0 0 24 24" fill="currentColor">
+					<path
+						d="M12 2c-4.41 0-8 3.59-8 8s3.59 8 8 8 8-3.59 8-8-3.59-8-8-8zm0 16c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zm0-10c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
+				</svg>
+				Network
+			</a>
+			<a href="/user-transaction" class="nav-button">
+				<svg viewBox="0 0 24 24" fill="currentColor">
+					<path
+						d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+				</svg>
+				Transactions
+			</a>
+			<a href="/analytics" class="nav-button">
+				<svg viewBox="0 0 24 24" fill="currentColor">
+					<path
+						d="M3 3v18h18V3H3zm16 16H5V5h14v14zM9 17H7v-2h2v2zm0-4H7v-2h2v2zm0-4H7V7h2v2zm6 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V7h2v2z" />
+				</svg>
+				Analytics
+			</a>
+			<a href="/logout" class="nav-button">
+				<svg viewBox="0 0 24 24" fill="currentColor">
+					<path
+						d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" />
+				</svg>
+				Logout
+			</a>
+		</div>
+	</header>
+
+
+	<div class="overlay" id="create-post-overlay"></div>
+	<div class="create-post-popup" id="create-post-popup">
+		<form th:action="@{/posts/create}" method="post" enctype="multipart/form-data">
+			<h3>Create New Post</h3>
+			<input id="post-title" name="title" type="text" placeholder="Title" required>
+			<textarea id="post-content" name="content" placeholder="Content" rows="4" required></textarea>
+			<div class="image-upload">
+				<label for="post-image">Image:</label>
+				<input type="file" id="post-image" name="image" accept="image/*">
+			</div>
+			<button type="submit" class="btn-post">Post</button>
+		</form>
+	</div>
+
+	<div class="sidebar">
+		<div class="profile-card">
+			<h3 th:text="${member.name}" class="profile-name"></h3>
+			<p th:text="${member.email}" class="profile-email"></p>
+
+			<div class="paypal-section" th:if="${member.paypalAccount != null}">
+				<img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" alt="PayPal Logo" class="paypal-logo">
+				<span th:text="${member.paypalAccount}" class="paypal-account"></span>
+			</div>
+			<div class="paypal-section" th:if="${member.paypalAccount == null}">
+				<button class="link-paypal-button" onclick="openPayPalModal()">
+					<img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" alt="PayPal Logo"
+						class="paypal-logo">
+					<span>Link PayPal Account</span>
+				</button>
+			</div>
+			<div class="account-actions">
+				<button class="action-button change-email-button" data-bs-toggle="modal"
+					data-bs-target="#changeEmailModal">Change Email</button>
+				<button class="action-button change-password-button" data-bs-toggle="modal"
+					data-bs-target="#changePasswordModal">Change Password</button>
+			</div>
+			<div class="posts-action">
+				<button class="action-button your-posts-button" onclick="togglePostsView()">
+					<span th:text="${showingUserPosts == true ? 'Your Social Feed' : 'Your Posts'}">Your Posts</span>
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<div th:if="${posts != null}" class="feed-container" style="margin-top: 80px;">
+		<div th:each="post : ${posts}" th:if="${post != null}" class="post-card">
+			<div class="post-header">
+				<img src="images/user2.png" alt="Profile" class="profile-pic">
+				<div>
+
+					<h4 th:if="${post.member.id != member.id}" th:text="${post.member.name}">User Name</h4>
+					<small th:text="${#temporals.format(post.timestamp, 'dd MMM yyyy HH:mm')}">Timestamp</small>
+					<!-- Edit button (three dots) for your own posts -->
+				</div>
+			</div>
+			<div class="post-content">
+				<h3 th:text="${post.title}"></h3>
+				<p th:text="${post.content}">Post Content</p>
+				<img th:if="${post.image != null}" th:src="@{'/post/image/' + ${post.id}}" alt="Post image">
+			</div>
+			<div class="post-actions">
+				<!-- Hide Like and Delete buttons for your own posts -->
+				<button th:if="${post.member.id != member.id}">👍 Like</button>
+				<button onclick="toggleComments(this)">🗨️ Comment</button>
+				<button th:if="${post.member.id == member.id}" class="edit-button"
+					th:classappend="'edit-button-' + ${post.id}" th:onclick="|openEditPostModal(${post.id})|">
+					📝 Edit
+				</button>
+				<button th:if="${post.member.id != member.id}" th:onclick="'openReportModal(' + ${post.id} + ')'">
+					❌ Report
+				</button>
+			</div>
+			<!-- Comments section -->
+			<div class="comments-section">
+				<div class="comment-input-container">
+					<div class="comment-input-wrapper">
+						<form th:action="@{/posts/{id}/comment(id=${post.id})}" method="post" class="comment-form">
+							<div class="comment-container">
+								<textarea name="content" class="comment-input" placeholder="Write a comment..."
+									oninput="autoResize(this)" required></textarea>
+								<button type="submit" class="send-comment-btn">
+									<svg viewBox="0 0 24 24" fill="currentColor">
+										<path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2 .01 7z"></path>
+									</svg>
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+				<!-- Display existing comments -->
+				<div class="comments-list">
+					<div th:each="comment : ${post.comments}" class="comment">
+						<div class="comment-content">
+							<div class="comment-header">
+								<span class="comment-author" th:text="${comment.member.name}">User Name</span>
+							</div>
+							<p class="comment-text" th:text="${comment.content}">Comment text</p>
+							<div class="comment-actions">
+								<span class="comment-action"
+									th:text="${#temporals.format(comment.timestamp, 'dd MMM yyyy HH:mm')}">Timestamp</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- The Modal -->
+	<div id="report-modal-container" class="report-modal-container">
+		<div class="report-modal-content">
+			<!-- Close Button -->
+			<span class="report-close" onclick="closeReportModal()">&times;</span>
+			<!-- Report Form -->
+			<form th:action="@{/posts/{id}/report(id=${postId})}" method="post" id="report-form">
+				<h2>Report Post</h2>
+				<div class="report-input-group">
+					<label for="reason">Reason for reporting:</label>
+					<textarea id="reason" name="reason" required placeholder="Enter your reason here"></textarea>
+				</div>
+				<button type="submit" class="report-submit-button">Report</button>
+			</form>
+		</div>
+	</div>
+
+	<div id="paypal-modal" class="modal">
+		<div class="modal-content">
+			<!-- PayPal Header -->
+			<div class="paypal-header">
+				<img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" alt="PayPal Logo" class="paypal-logo">
+				<h2>Log in to PayPal</h2>
+			</div>
+
+			<!-- Close Button -->
+			<span class="close" onclick="closePayPalModal()">&times;</span>
+
+			<!-- Login Form -->
+			<form th:action="@{/linkPayPal}" method="post" id="paypal-login-form">
+				<div class="input-group">
+					<label for="email">Email or mobile number</label>
+					<input type="text" id="email" name="email" required placeholder="Email or mobile number">
+				</div>
+
+				<div class="input-group">
+					<label for="password">Password</label>
+					<input type="password" id="password" name="password" required placeholder="Password">
+				</div>
+
+				<button type="submit" class="paypal-submit-button">Link Account</button>
+			</form>
+		</div>
+	</div>
+
+	<button class="floating-create-post" onclick="showCreatePostPopup()">
+		<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+			<path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+		</svg>
+		Create Post
+	</button>
+
+	<!-- Edit Modal -->
+	<div th:each="post : ${posts}" class="edit-modal" th:id="'edit-modal-' + ${post.id}" style="display: none;">
+		<div class="edit-modal-content">
+			<span class="edit-close" th:onclick="|closeEditPostModal(${post.id})|">
+				&times;
+			</span>
+			<h2>Edit Post</h2>
+			<form th:action="@{/posts/{id}/edit(id=${post.id})}" method="post" enctype="multipart/form-data">
+				<!-- Title Field -->
+				<label for="title">Title:</label>
+				<input type="text" name="title" th:value="${post.title}" required />
+
+				<!-- Content Field -->
+				<label for="content">Content:</label>
+				<textarea name="content" required th:text="${post.content}"></textarea>
+
+				<!-- Existing Image Preview -->
+				<div th:if="${post.image != null}">
+					<label>Current Image:</label>
+					<img th:src="@{'/post/image/' + ${post.id}}" alt="Current Image"
+						style="max-width: 100%; height: auto;">
+				</div>
+
+				<!-- New Image Upload -->
+				<label for="image">Upload New Image:</label>
+				<input type="file" name="image" accept="image/*" />
+
+				<!-- Submit Button -->
+				<button type="submit">Save Changes</button>
+			</form>
+		</div>
+	</div>
+	<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="changePasswordModalLabel">Change Password</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<form th:action="@{/change-password}" method="post">
+						<div class="mb-3">
+							<label for="currentPassword" class="form-label">Current Password</label>
+							<input type="password" class="form-control" id="currentPassword" name="currentPassword"
+								required>
+						</div>
+						<div class="mb-3">
+							<label for="newPassword" class="form-label">New Password</label>
+							<input type="password" class="form-control" id="newPassword" name="newPassword" required>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+							<button type="submit" class="btn btn-primary">Change Password</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="changeEmailModal" tabindex="-1" aria-labelledby="changeEmailModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="changeEmailModalLabel">Change Email</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<form th:action="@{/change-email}" method="post">
+						<div class="mb-3">
+							<label for="newEmail" class="form-label">New Email</label>
+							<input type="email" class="form-control" id="newEmail" name="newEmail" required>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+							<button type="submit" class="btn btn-primary">Change Email</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	<script>
+		function openEditPostModal(postId) {
+			// Fetch the post data (you can use an API endpoint for this)
+			fetch(`/posts/${postId}`)
+				.then(response => response.json())
+				.then(post => {
+					// Populate the edit modal with the post data
+					document.getElementById("edit-post-title").value = post.title;
+					document.getElementById("edit-post-content").value = post.content;
+					document.getElementById("edit-post-image").src = post.image || "";
+
+					// Show the edit modal
+					document.getElementById("edit-post-overlay").style.display = "block";
+					document.getElementById("edit-post-popup").style.display = "block";
+				})
+				.catch(error => console.error("Error fetching post:", error));
+		}
+
+		function closeEditPostModal() {
+			document.getElementById("edit-post-overlay").style.display = "none";
+			document.getElementById("edit-post-popup").style.display = "none";
+		}
+
+		function toggleComments(button) {
+			const postCard = button.closest('.post-card');
+			const commentsSection = postCard.querySelector('.comments-section');
+
+			if (commentsSection.style.display === 'none' || commentsSection.style.display === '') {
+				commentsSection.style.display = 'block';
+			} else {
+				commentsSection.style.display = 'none';
+			}
+		}
+
+		function autoResize(textarea) {
+			textarea.style.height = 'auto';
+			textarea.style.height = (textarea.scrollHeight) + 'px';
+		}
+
+		function togglePostsView() {
+			const currentUrl = new URL(window.location.href);
+			const isShowingUserPosts = currentUrl.searchParams.get('userPosts') === 'true';
+
+			if (isShowingUserPosts) {
+				window.location.href = '/socialfeed?userPosts=false';
+			} else {
+				window.location.href = '/socialfeed?userPosts=true';
+			}
+		}
+		function showCreatePostPopup() {
+			document.getElementById("create-post-overlay").style.display = "block";
+			document.getElementById("create-post-popup").style.display = "block";
+		}
+		function hideCreatePostPopup() {
+			document.getElementById("create-post-overlay").style.display = "none";
+			document.getElementById("create-post-popup").style.display = "none";
+		}
+		function showCreatePostPopup() {
+			document.getElementById("create-post-overlay").style.display = "block";
+			document.getElementById("create-post-popup").style.display = "block";
+		}
+		function hideCreatePostPopup() {
+			document.getElementById("create-post-overlay").style.display = "none";
+			document.getElementById("create-post-popup").style.display = "none";
+		}
+		document.getElementById("create-post-overlay").addEventListener('click', hideCreatePostPopup);
+
+		// Open the modal
+		function openPayPalModal() {
+			document.getElementById("paypal-modal").style.display = "block";
+		}
+
+		// Close the modal
+		function closePayPalModal() {
+			document.getElementById("paypal-modal").style.display = "none";
+		}
+
+		// Handle form submission
+		function handlePayPalLogin(event) {
+			event.preventDefault(); // Prevent actual form submission
+
+			// Get the email and password from the form
+			const email = document.getElementById("email").value;
+			const password = document.getElementById("password").value;
+
+			// Simulate a successful login
+			if (email && password) {
+				alert(`PayPal account linked successfully!\nEmail: ${email}`);
+				closePayPalModal();
+
+				// Simulate saving the PayPal email to the database
+				savePayPalAccount(email);
+			} else {
+				alert("Please enter both email and password.");
+			}
+		}
+
+		// Simulate saving the PayPal account to the database
+		function savePayPalAccount(email) {
+			console.log(`Saving PayPal email to database: ${email}`);
+
+			// Update the UI to show the linked PayPal account
+			const paypalSection = document.querySelector('.paypal-section');
+			paypalSection.innerHTML = `
+        <img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" alt="PayPal Logo" class="paypal-logo">
+        <span class="paypal-account">${email}</span>
+    `;
+		}
+
+		let postId; // To store the ID of the post being reported
+
+		function openReportModal(postIdValue) {
+			// Update the form action with the correct post ID
+			const form = document.getElementById('report-form');
+			form.action = `/posts/${postIdValue}/report`;
+
+			// Show the modal
+			const modal = document.getElementById('report-modal-container');
+			modal.style.display = "block";
+		}
+
+		function closeReportModal() {
+			const modal = document.getElementById('report-modal-container');
+			modal.style.display = "none";
+		}
+
+		document.addEventListener('click', function (event) {
+			const modal = document.getElementById('report-modal-container');
+			const modalContent = document.querySelector('.report-modal-content');
+
+			// Check if the modal is open and the click is outside the modal content
+			if (modal && modal.classList.contains("active") && !modalContent.contains(event.target)) {
+				closeReportModal();
+			}
+		});
+
+		function openEditPostModal(postId) {
+			// Show the edit modal for the specific post
+			document.getElementById(`edit-modal-${postId}`).style.display = "block";
+		}
+
+		function closeEditPostModal(postId) {
+			// Hide the edit modal for the specific post
+			document.getElementById(`edit-modal-${postId}`).style.display = "none";
+		}
+	</script>
+</body>
+
+</html>

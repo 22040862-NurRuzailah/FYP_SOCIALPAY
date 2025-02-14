@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction Analytics</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Custom styles to fit everything on one page */
+        body {
+			font-family: Arial, sans-serif;
+			margin: 0;
+			padding: 0;
+			background-color: #f9f9f9;
+		}
+
+		header {
+			position: fixed;
+			top: 0;
+			width: 100%;
+			background-color: #1877f2;
+			padding: 6px 20px;
+			box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			z-index: 1000;
+		}
+
+		.logo img {
+			height: 40px;
+			width: auto;
+		}
+
+		.nav-buttons {
+			display: flex;
+			gap: 25px;
+			align-items: center;
+			margin: 0 auto;
+		}
+
+		.nav-button {
+			background: none;
+			border: none;
+			color: white;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 4px;
+			padding: 8px 12px;
+			border-radius: 8px;
+			font-size: 12px;
+			font-weight: 500;
+			cursor: pointer;
+			transition: all 0.2s ease;
+		}
+
+		.nav-button:hover {
+			background-color: rgba(255, 255, 255, 0.1);
+		}
+
+		.nav-button svg {
+			width: 20px;
+			height: 20px;
+			fill: white;
+		}
+
+		.header-actions {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
+
+		.header-actions button {
+			background-color: rgba(255, 255, 255, 0.1);
+			color: white;
+			border: none;
+			padding: 8px 20px;
+			border-radius: 20px;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.3s ease;
+		}
+
+		.header-actions button:hover {
+			background-color: rgba(255, 255, 255, 0.2);
+		}
+
+        .card {
+            margin-bottom: 1rem;
+        }
+
+        canvas {
+            max-height: 200px;
+            /* Limit chart height */
+        }
+
+        .filter-row {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <a href="/socialfeed">
+                <img src="images/splogo.png" alt="Logo">
+            </a>
+        </div>
+        <div class="nav-buttons">
+            <a href="/socialfeed" class="nav-button">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3L2 12h3v8h5zm-6 0h2v-4H4v4zm16 0h2v-4h-2v4z" />
+                </svg>
+                Home
+            </a>
+            <a href="/add-friends" class="nav-button">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2c-4.41 0-8 3.59-8 8s3.59 8 8 8 8-3.59 8-8-3.59-8-8-8zm0 16c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zm0-10c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
+                </svg>
+                Network
+            </a>
+            <a href="/user-transaction" class="nav-button">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+                </svg>
+                Transactions
+            </a>
+            <a href="/analytics" class="nav-button">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M3 3v18h18V3H3zm16 16H5V5h14v14zM9 17H7v-2h2v2zm0-4H7v-2h2v2zm0-4H7V7h2v2zm6 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V7h2v2z" />
+                </svg>
+                Analytics
+            </a>
+            <a href="/logout" class="nav-button">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" />
+                </svg>
+                Logout
+            </a>
+        </div>
+    </header>
+    <div class="container mt-3">
+        <h1 class="text-center mb-3">Transaction Analytics</h1>
+
+        <!-- Three Charts Row -->
+        <div class="row">
+            <!-- Pie Chart -->
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-header bg-success text-white">
+                        <h6 class="card-title m-0">Transaction Types Distribution</h6>
+                    </div>
+                    <div class="card-body p-2">
+                        <canvas id="transactionTypeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top 5 Days of Highest Transaction Amounts -->
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-header bg-primary text-white">
+                        <h6 class="card-title m-0">Top 5 Days of Highest Txn Amounts</h6>
+                    </div>
+                    <div class="card-body p-2">
+                        <canvas id="topDaysChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top 3 Highest rcvName Values -->
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-header bg-info text-white">
+                        <h6 class="card-title m-0">Top 3 Highest rcvName Values</h6>
+                    </div>
+                    <div class="card-body p-2">
+                        <canvas id="topRcvNameChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters and Line Chart -->
+        <div class="row">
+            <!-- Filters -->
+            <div class="col-12 filter-row">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="yearFilter" class="form-label">Select Year:</label>
+                        <select id="yearFilter" class="form-select form-select-sm">
+                            <option value="all">All Years</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="monthFilter" class="form-label">Select Month:</label>
+                        <select id="monthFilter" class="form-select form-select-sm">
+                            <option value="all">All Months</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Line Chart -->
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-warning text-white">
+                        <h6 class="card-title m-0">Transaction Amount Over Time</h6>
+                    </div>
+                    <div class="card-body p-2">
+                        <canvas id="transactionAmountChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        // Fetch transactions data from the backend using Thymeleaf
+        /*[[${transactions}]]*/; // This will be replaced by the actual data passed from the backend
+        const transactions = /*[[${transactions}]]*/[];
+
+        // Helper function to group transactions by month or year
+        function groupTransactionsByPeriod(transactions, period) {
+            const grouped = {};
+            transactions.forEach(transaction => {
+                const date = new Date(transaction.transactionDate);
+                const key = period === 'monthly'
+                    ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
+                    : `${date.getFullYear()}`;
+                if (!grouped[key]) {
+                    grouped[key] = { totalAmount: 0, count: 0 };
+                }
+                grouped[key].totalAmount += transaction.transactionAmount;
+                grouped[key].count += 1;
+            });
+            return Object.keys(grouped).sort().map(key => ({
+                period: key,
+                totalAmount: grouped[key].totalAmount,
+                count: grouped[key].count
+            }));
+        }
+
+        // Parse transaction data
+        const types = [...new Set(transactions.map(t => t.transactionType))];
+        const typeCounts = types.map(type => transactions.filter(t => t.transactionType === type).length);
+
+        // Top 5 Days of Highest Transaction Amounts
+        const topDays = transactions
+            .map(t => ({ date: t.transactionDate, amount: t.transactionAmount }))
+            .sort((a, b) => b.amount - a.amount)
+            .slice(0, 5);
+
+        // Top 3 Highest rcvName Values
+        const rcvNames = transactions
+            .filter(t => t.rcvName)
+            .reduce((acc, t) => {
+                acc[t.rcvName] = (acc[t.rcvName] || 0) + t.transactionAmount;
+                return acc;
+            }, {});
+        const topRcvNames = Object.entries(rcvNames)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 3);
+
+        // Initialize charts
+        let transactionAmountChart, transactionTypeChart, topDaysChart, topRcvNameChart;
+
+        function initializeCharts(filteredTransactions) {
+            // Destroy existing charts to avoid duplication
+            if (transactionAmountChart) transactionAmountChart.destroy();
+            if (transactionTypeChart) transactionTypeChart.destroy();
+            if (topDaysChart) topDaysChart.destroy();
+            if (topRcvNameChart) topRcvNameChart.destroy();
+
+            // Group transactions by month/year
+            const groupedData = groupTransactionsByPeriod(filteredTransactions, 'monthly');
+
+            // Transaction Types Distribution Chart
+            const ctx1 = document.getElementById('transactionTypeChart').getContext('2d');
+            transactionTypeChart = new Chart(ctx1, {
+                type: 'pie',
+                data: {
+                    labels: types,
+                    datasets: [{
+                        label: 'Transaction Types',
+                        data: typeCounts,
+                        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: true },
+                        title: { display: false }
+                    }
+                }
+            });
+
+            // Top 5 Days of Highest Txn Amounts Chart
+            const ctx2 = document.getElementById('topDaysChart').getContext('2d');
+            topDaysChart = new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: topDays.map(d => d.date),
+                    datasets: [{
+                        label: 'Transaction Amount',
+                        data: topDays.map(d => d.amount),
+                        backgroundColor: '#36A2EB'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        title: { display: false }
+                    },
+                    scales: {
+                        x: { ticks: { font: { size: 8 } } },
+                        y: { ticks: { font: { size: 8 } } }
+                    }
+                }
+            });
+
+            // Top 3 Highest rcvName Values Chart
+            const ctx3 = document.getElementById('topRcvNameChart').getContext('2d');
+            topRcvNameChart = new Chart(ctx3, {
+                type: 'bar',
+                data: {
+                    labels: topRcvNames.map(([name]) => name),
+                    datasets: [{
+                        label: 'Total Transaction Amount',
+                        data: topRcvNames.map(([_, amount]) => amount),
+                        backgroundColor: '#FFCE56'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        title: { display: false }
+                    },
+                    scales: {
+                        x: { ticks: { font: { size: 8 } } },
+                        y: { ticks: { font: { size: 8 } } }
+                    }
+                }
+            });
+
+            // Transaction Amount Over Time Chart
+            const ctx4 = document.getElementById('transactionAmountChart').getContext('2d');
+            transactionAmountChart = new Chart(ctx4, {
+                type: 'line',
+                data: {
+                    labels: groupedData.map(d => d.period),
+                    datasets: [{
+                        label: 'Total Transaction Amount',
+                        data: groupedData.map(d => d.totalAmount),
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 2,
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: true },
+                        title: { display: false }
+                    },
+                    scales: {
+                        x: { ticks: { font: { size: 8 } } },
+                        y: { ticks: { font: { size: 8 } } }
+                    }
+                }
+            });
+        }
+
+        // Populate year and month filters
+        function populateFilters() {
+            const years = [...new Set(transactions.map(t => new Date(t.transactionDate).getFullYear()))].sort();
+            const months = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, '0'));
+
+            const yearFilter = document.getElementById('yearFilter');
+            const monthFilter = document.getElementById('monthFilter');
+
+            years.forEach(year => {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                yearFilter.appendChild(option);
+            });
+
+            months.forEach(month => {
+                const option = document.createElement('option');
+                option.value = month;
+                option.textContent = new Date(2023, month - 1).toLocaleString('default', { month: 'long' });
+                monthFilter.appendChild(option);
+            });
+        }
+
+        // Filter transactions based on selected year and month
+        function filterTransactions() {
+            const yearFilter = document.getElementById('yearFilter').value;
+            const monthFilter = document.getElementById('monthFilter').value;
+
+            const filteredTransactions = transactions.filter(transaction => {
+                const date = new Date(transaction.transactionDate);
+                const yearMatch = yearFilter === 'all' || date.getFullYear() == yearFilter;
+                const monthMatch = monthFilter === 'all' || String(date.getMonth() + 1).padStart(2, '0') === monthFilter;
+                return yearMatch && monthMatch;
+            });
+
+            initializeCharts(filteredTransactions);
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            populateFilters();
+            initializeCharts(transactions);
+
+            // Add event listeners to filters
+            document.getElementById('yearFilter').addEventListener('change', filterTransactions);
+            document.getElementById('monthFilter').addEventListener('change', filterTransactions);
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Sign Up</title>
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/style-responsive.css">
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+			margin: 0;
+			background-color: #f9f9f9;
+		}
+
+		.signup-container {
+			background: #fff;
+			padding: 30px;
+			border-radius: 8px;
+			box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+			max-width: 400px;
+			width: 100%;
+			text-align: center;
+		}
+
+		.signup-container h1 {
+			font-size: 24px;
+			margin-bottom: 20px;
+		}
+
+		.signup-container a {
+			color: #333;
+			text-decoration: none;
+			font-size: 14px;
+		}
+
+		.signup-container a:hover {
+			text-decoration: underline;
+		}
+
+		.signup-container form input[type="text"],
+		.signup-container form input[type="email"],
+		.signup-container form input[type="password"] {
+			width: 100%;
+			padding: 10px;
+			margin: 10px 0;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+		}
+
+		.signup-container form button {
+			background: black;
+			color: white;
+			padding: 10px;
+			border: none;
+			border-radius: 4px;
+			cursor: pointer;
+			width: 100%;
+			font-size: 16px;
+		}
+
+		.signup-container form button:hover {
+			background: #333;
+		}
+
+		.singpass-btn {
+			margin-top: 10px;
+			background: white;
+			border: 1px solid #ccc;
+			color: black;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			padding: 10px;
+			border-radius: 4px;
+			font-size: 14px;
+			cursor: pointer;
+		}
+
+		.singpass-btn img {
+			width: 20px;
+			margin-right: 8px;
+		}
+
+		.otp-popup {
+			display: none;
+			position: fixed;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			background: #fff;
+			padding: 20px;
+			border-radius: 8px;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+			text-align: center;
+			z-index: 1000;
+		}
+
+		.otp-popup input {
+			width: 80%;
+			padding: 10px;
+			margin: 10px 0;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+		}
+
+		.otp-popup button {
+			background: black;
+			color: white;
+			border: none;
+			padding: 10px;
+			border-radius: 4px;
+			cursor: pointer;
+		}
+
+		.otp-popup button:hover {
+			background: #333;
+		}
+
+		.overlay {
+			display: none;
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0, 0, 0, 0.5);
+			z-index: 999;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="signup-container">
+		<h1>Create New Account</h1>
+		<p>Already Registered? <a href="/login">Login</a></p>
+		<form id="signupForm">
+			<input type="text" name="name" placeholder="Name" required>
+			<input type="email" name="email" placeholder="Email" required>
+			<input type="password" name="password" placeholder="Password" required minlength="8">
+			<button type="submit">Sign Up</button>
+		</form>
+		<div class="singpass-btn" onclick="retrieveMyInfoWithSingpass()">
+			Retrieve Myinfo with MockPass
+		</div>
+	</div>
+
+	<div class="overlay" id="overlay"></div>
+
+	<div class="otp-popup" id="otpPopup">
+		<h2>Verify OTP</h2>
+		<p>An OTP has been sent to your email. Please enter it below:</p>
+		<input type="hidden" id="email" name="email" value="">
+		<input type="text" id="otp" placeholder="Enter OTP" maxlength="6">
+		<button onclick="submitOtp()">Submit OTP</button>
+	</div>
+
+	<script>
+		document.getElementById('signupForm').addEventListener('submit', async function (e) {
+			e.preventDefault();
+
+			const formData = new FormData(e.target);
+			const response = await fetch('/signup', {
+				method: 'POST',
+				body: formData,
+			});
+
+			if (response.ok) {
+				document.getElementById('overlay').style.display = 'block';
+				document.getElementById('otpPopup').style.display = 'block';
+
+				const email = formData.get('email');
+				document.getElementById('email').value = email;
+			} else {
+				alert('Signup failed. Please try again.');
+			}
+		});
+
+		async function submitOtp() {
+			const email = document.getElementById('email').value;
+			const otp = document.getElementById('otp').value;
+
+			const response = await fetch('/verify-otp', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ email, otp }),
+			});
+
+			if (response.ok) {
+				alert('Account activated successfully!');
+				window.location.href = '/login';
+			} else {
+				alert('Invalid or expired OTP. Please try again.');
+			}
+		}
+
+		function retrieveMyInfoWithSingpass() {
+			window.location.href = '/oauth2/authorization/mockpass';
+		}
+	</script>
+</body>
+
+</html>

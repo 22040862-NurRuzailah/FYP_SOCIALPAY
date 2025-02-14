@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Admins</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        #sidebarMenu {
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #fff;
+            border-right: 1px solid #ddd;
+        }
+        main {
+            margin-left: 250px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Include Admin Header -->
+    <header th:replace="fragments/admin-header :: admin-header"></header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container mt-4">
+            <h1>Manage Admins</h1>
+
+            <!-- Add Admin Button -->
+            <div class="mb-3">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAdminModal">
+                    <i class="fas fa-user-plus"></i> Add Admin
+                </button>
+            </div>
+
+            <!-- Add Admin Modal -->
+            <div class="modal fade" id="addAdminModal" tabindex="-1" aria-labelledby="addAdminModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addAdminModalLabel">Add New Admin</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form th:action="@{/addAdmin}" method="post" id="addAdminForm" th:object="${member}">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="name" class="form-label">Name</label>
+                                        <input type="text" class="form-control" id="name" name="name" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="email" name="email" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="password" class="form-label">Password</label>
+                                        <input type="password" class="form-control" id="password" name="password"
+                                            required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="confirmPassword" class="form-label">Confirm Password</label>
+                                        <input type="password" class="form-control" id="confirmPassword"
+                                            name="confirmPassword" required>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-success" id="submitBtn">Add Admin</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admins Table -->
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="admin : ${admins}">
+                        <td th:text="${admin.id}"></td>
+                        <td th:text="${admin.name}"></td>
+                        <td th:text="${admin.email}"></td>
+                        <td>
+                            <button class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                                data-bs-target="#deleteAdminModal"
+                                th:attr="data-admin-id=${admin.id}, data-admin-name=${admin.name}">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Delete Admin Confirmation Modal -->
+            <div class="modal fade" id="deleteAdminModal" tabindex="-1" aria-labelledby="deleteAdminModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteAdminModalLabel">Confirm Deletion</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to delete admin <strong id="adminName"></strong>?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <form th:action="@{/deleteAdmin}" method="post" id="deleteAdminForm">
+                                <input type="hidden" id="adminId" name="id">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const deleteAdminModal = document.getElementById('deleteAdminModal');
+        deleteAdminModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const adminId = button.getAttribute('data-admin-id');
+            const adminName = button.getAttribute('data-admin-name');
+            const modalBody = deleteAdminModal.querySelector('.modal-body #adminName');
+            const adminIdInput = deleteAdminModal.querySelector('#adminId');
+            modalBody.textContent = adminName;
+            adminIdInput.value = adminId;
+        });
+
+        document.getElementById('addAdminForm').addEventListener('submit', function (event) {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            if (password !== confirmPassword) {
+                event.preventDefault();
+                alert('Passwords do not match. Please try again.');
+            }
+        });
+    </script>
+</body>
+</html>

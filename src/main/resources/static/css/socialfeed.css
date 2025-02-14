@@ -1,0 +1,893 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+}
+
+header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: #1877f2;
+    padding: 6px 20px;
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+}
+
+.logo img {
+    height: 40px;
+    width: auto;
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+    margin: 0 auto;
+}
+
+.nav-button {
+    background: none;
+    border: none;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nav-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-button svg {
+    width: 20px;
+    height: 20px;
+    fill: white;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header-actions button {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.header-actions button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.feed-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+
+.post-card {
+    background: white;
+    border-radius: 30px;
+    margin-bottom: 14px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease;
+}
+
+.post-card:hover {
+    transform: translateY(-2px);
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.profile-pic {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin-right: 12px;
+}
+
+.post-header h4 {
+    margin: 0;
+    color: #050505;
+    font-size: 15px;
+}
+
+.post-header small {
+    color: #65676b;
+    font-size: 13px;
+}
+
+.post-content {
+    margin: 12px 0;
+}
+
+.post-content p {
+    color: #050505;
+    margin: 8px 0;
+    font-size: 15px;
+    line-height: 1.4;
+}
+
+.post-content img {
+    width: 100%;
+    border-radius: 8px;
+    margin-top: 12px;
+    max-height: 500px;
+    object-fit: cover;
+}
+
+.post-actions {
+    display: flex;
+    gap: 8px;
+    border-top: 1px solid #ddd;
+    padding-top: 12px;
+    margin-top: 12px;
+}
+
+.post-actions button {
+    flex: 1;
+    background: none;
+    border: none;
+    padding: 8px;
+    border-radius: 4px;
+    color: #65676b;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.post-actions button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.comments-section {
+    margin-top: 12px;
+    border-top: 1px solid #ddd;
+    padding-top: 12px;
+    display: none;
+}
+
+.comment-input-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    align-items: flex-end;
+}
+
+.comment-input-wrapper {
+    flex-grow: 1;
+    position: relative;
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+}
+
+.comment-input {
+    flex-grow: 1; /* Allows the textarea to expand and take available space */
+    min-height: 40px; /* Minimum height for the textarea */
+    padding: 10px; /* Padding inside the textarea */
+    font-size: 16px; /* Font size */
+    border: 1px solid #ccc; /* Border styling */
+    border-radius: 5px; /* Rounded corners */
+    resize: none; /* Prevent manual resizing */
+}
+
+.comment-input:focus {
+    border-color: #1877f2;
+    background-color: #f0f2f5;
+}
+
+.send-comment-btn {
+    display: flex; /* Ensures proper alignment of SVG */
+    align-items: center; /* Centers the SVG icon vertically */
+    justify-content: center; /* Centers the SVG icon horizontally */
+    background-color: #007bff; /* Button background color */
+    color: white; /* Icon color */
+    border: none; /* Removes border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    padding: 10px; /* Padding around the icon */
+}
+
+.send-comment-btn:hover {
+    background-color: #f0f2f5;
+}
+
+.send-comment-btn svg {
+    width: 20px; /* SVG icon size */
+    height: 20px; /* SVG icon size */
+    fill: white; /* Icon color */
+}
+
+.comments-list {
+    margin-top: 10px;
+}
+
+.comment {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.comment-content {
+    background-color: #f0f2f5;
+    padding: 8px 12px;
+    border-radius: 15px;
+    flex-grow: 1;
+}
+
+.comment-header {
+    margin-bottom: 4px;
+}
+
+.comment-author {
+    font-weight: 600;
+    font-size: 13px;
+    color: #050505;
+}
+
+.comment-text {
+    font-size: 13px;
+    color: #050505;
+    margin: 0;
+}
+
+.comment-actions {
+    margin-top: 4px;
+    display: flex;
+    gap: 15px;
+}
+
+.comment-action {
+    font-size: 12px;
+    color: #65676b;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.comment-action:hover {
+    text-decoration: underline;
+}
+
+.edit-post-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 10px;
+}
+
+.edit-post-button svg {
+    width: 16px;
+    height: 16px;
+    fill: #65676b;
+}
+
+.edit-post-button:hover svg {
+    fill: #1877f2;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: none;
+}
+
+.floating-create-post {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: #1877f2;
+    color: white;
+    border: none;
+    padding: 18px 24px;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.floating-create-post:hover {
+    background-color: #166fe5;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* Overlay styling */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: none;
+    /* Hidden by default */
+}
+
+/* Popup styling */
+.create-post-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    width: 400px;
+    padding: 20px;
+    z-index: 1001;
+    display: none;
+    /* Hidden by default */
+}
+
+/* Blue top border */
+.create-post-popup::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background-color: #3498db;
+    /* Blue color */
+    border-radius: 10px 10px 0 0;
+}
+
+/* Form styling */
+.create-post-popup h3 {
+    margin-top: 0;
+    color: #333;
+    text-align: center;
+}
+
+.create-post-popup input[type="text"],
+.create-post-popup textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.create-post-popup textarea {
+    resize: vertical;
+}
+
+/* Image upload styling */
+.image-upload {
+    margin-bottom: 15px;
+}
+
+.image-upload label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+/* Button styling */
+.btn-post {
+    width: 100%;
+    padding: 10px;
+    background-color: #3498db;
+    /* Blue color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn-post:hover {
+    background-color: #2980b9;
+    /* Darker blue on hover */
+}
+
+.image-upload {
+    margin-bottom: 15px;
+}
+
+.image-upload label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+.btn-post {
+    width: 100%;
+    padding: 10px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn-post:hover {
+    background-color: #2980b9;
+}
+
+.sidebar {
+    position: fixed;
+    top: 80px;
+    /* Adjusted for header height */
+    left: 20px;
+    /* Changed from right to left */
+    width: 280px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+/* General Profile Card Styling */
+.sidebar {
+    width: 300px;
+    margin: 20px auto;
+    font-family: Arial, sans-serif;
+}
+
+.profile-card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+}
+
+/* Profile Picture */
+.profile-picture {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 15px;
+    border: 2px solid #0070ba;
+    /* Blue border */
+}
+
+/* Profile Name */
+.profile-name {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333333;
+    margin-bottom: 5px;
+}
+
+/* Profile Email */
+.profile-email {
+    font-size: 14px;
+    color: #666666;
+    margin-bottom: 15px;
+}
+
+/* PayPal Section */
+.paypal-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.paypal-logo {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+}
+
+.paypal-account {
+    font-size: 14px;
+    color: #0070ba;
+    /* Blue text for PayPal account */
+    font-weight: 500;
+}
+
+.link-paypal-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #0070ba;
+    /* PayPal blue */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.link-paypal-button:hover {
+    background-color: #005c9d;
+    /* Darker PayPal blue */
+}
+
+/* Action Buttons */
+.action-button {
+    display: block;
+    width: 100%;
+    background-color: #0070ba;
+    /* Blue theme */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 14px;
+    margin: 5px 0;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.action-button:hover {
+    background-color: #005c9d;
+    /* Darker blue on hover */
+}
+
+/* Account Actions and Posts Action */
+.account-actions,
+.posts-action {
+    margin-top: 15px;
+}
+
+/* Modal Background */
+.modal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Semi-transparent background */
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 30px;
+    border: none;
+    width: 400px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+/* PayPal Header */
+.paypal-header {
+    margin-bottom: 20px;
+}
+
+.paypal-header img {
+    width: 60px;
+    margin-bottom: 10px;
+}
+
+.paypal-header h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+}
+
+/* Close Button */
+.close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+}
+
+/* Input Groups */
+.input-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.input-group label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.forgot-password {
+    display: block;
+    margin-top: 5px;
+    font-size: 14px;
+    color: #0070ba;
+    text-decoration: none;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+/* Submit Button */
+.paypal-submit-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #0070ba;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.paypal-submit-button:hover {
+    background-color: #005ea2;
+}
+
+/* Footer Links */
+.paypal-footer {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #666;
+}
+
+.paypal-footer a {
+    color: #0070ba;
+    text-decoration: none;
+}
+
+.paypal-footer a:hover {
+    text-decoration: underline;
+}
+
+.report-modal-container {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.report-modal-container.active {
+    display: block !important;
+}
+
+/* Modal Content */
+.report-modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 400px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    position: relative;
+    /* Needed for positioning the close button */
+}
+
+/* Close Button */
+.report-close {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+}
+
+.report-close:hover,
+.report-close:focus {
+    color: black;
+    text-decoration: none;
+}
+
+/* Input Groups */
+.report-input-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.report-input-group label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.report-input-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Submit Button */
+.report-submit-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #ff4d4d;
+    /* Red color for reporting */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.report-submit-button:hover {
+    background-color: #e60000;
+}
+
+
+/* Edit Modal Styles */
+.edit-modal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 1000;
+    /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Black w/ opacity */
+}
+
+.edit-modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    /* 10% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    /* Could be more or less, depending on screen size */
+    max-width: 600px;
+    /* Maximum width */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.edit-close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.edit-close:hover,
+.edit-close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Form Styles */
+.edit-modal-content form {
+    display: flex;
+    flex-direction: column;
+}
+
+.edit-modal-content label {
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.edit-modal-content input[type="text"],
+.edit-modal-content textarea {
+    margin-bottom: 16px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.edit-modal-content textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.comment-form {
+    display: flex;
+    flex-direction: column; /* Ensures proper vertical alignment if needed */
+    width: 100%; /* Adjust as needed */
+}
+
+.comment-container {
+    display: flex;
+    align-items: center; /* Aligns textarea and button vertically */
+    gap: 10px; /* Adds spacing between textarea and button */
+}
+
+.edit-modal-content button[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.edit-modal-content button[type="submit"]:hover {
+    background-color: #45a049;
+}

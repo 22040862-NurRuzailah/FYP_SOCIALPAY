@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+<<<<<<< HEAD
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+=======
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+>>>>>>> 22f51a8 (asdfgfds)
+    <style>
+        #sidebarMenu {
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #fff;
+            border-right: 1px solid #ddd;
+        }
+
+        main {
+            margin-left: 250px;
+            padding: 20px;
+        }
+
+        .dashboard-container {
+            display: flex;
+            gap: 50px;
+            padding: 20px;
+        }
+
+        .dashboard-circles {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+            flex: 0.7;
+        }
+
+        .circle-container {
+            text-align: center;
+        }
+
+        .circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 10px solid #002b5c;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: white;
+            margin: 0 auto;
+        }
+
+        .percent {
+            font-size: 36px;
+            font-weight: bold;
+            color: black;
+        }
+
+        .label {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .review-button {
+            margin-top: 10px;
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #002b5c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+        .review-button:hover {
+            background-color: #001f3f;
+        }
+
+        .notification-tab {
+            width: 400px;
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+            flex: 0.3;
+        }
+
+        .notification-tab h4 {
+            margin-bottom: 25px;
+            color: #002b5c;
+            font-weight: bold;
+            border-bottom: 2px solid #002b5c;
+            padding-bottom: 15px;
+        }
+
+        .notifications-list {
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .notifications-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .notifications-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .notifications-list::-webkit-scrollbar-thumb {
+            background: #002b5c;
+            border-radius: 4px;
+        }
+
+        .notification-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f8f9fa;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid #e9ecef;
+        }
+
+        .notification-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .notification-message {
+            flex-grow: 1;
+            margin-right: 15px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .notification-close {
+            background-color: transparent;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #dc3545;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .notification-close:hover {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .dashboard-circles {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .circle-container {
+            text-align: center;
+            flex: 1;
+            min-width: 180px;
+        }
+
+        .circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 10px solid #002b5c;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: white;
+        }
+
+        .percent {
+            font-size: 36px;
+            font-weight: bold;
+            color: black;
+        }
+
+        .label {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #333;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+<<<<<<< HEAD
+=======
+    <!-- Include Admin Header -->
+>>>>>>> 22f51a8 (asdfgfds)
+    <header th:replace="fragments/admin-header :: admin-header"></header>
+
+    <main>
+<<<<<<< HEAD
+        <div class="dashboard-container">
+            <div class="dashboard-circles">
+=======
+        <div class="container mt-4">
+
+            <!-- Dashboard Circles -->
+            <div class="dashboard-circles">
+
+                <!-- Banned Members -->
+>>>>>>> 22f51a8 (asdfgfds)
+                <div class="circle-container">
+                    <div class="circle">
+                        <span class="percent" th:text="${bannedMembersCount}">0</span>
+                    </div>
+                    <div class="label">Banned Members</div>
+<<<<<<< HEAD
+                    <button class="review-button" data-bs-toggle="modal"
+                        data-bs-target="#bannedMembersModal">Review</button>
+                </div>
+
+=======
+                </div>
+
+                <!-- Flagged Transactions -->
+>>>>>>> 22f51a8 (asdfgfds)
+                <div class="circle-container">
+                    <div class="circle">
+                        <span class="percent" th:text="${flaggedTxnsCount}">0</span>
+                    </div>
+                    <div class="label">Flagged Transactions</div>
+<<<<<<< HEAD
+                    <button class="review-button" data-bs-toggle="modal"
+                        data-bs-target="#flaggedTxnsModal">Review</button>
+                </div>
+
+=======
+                </div>
+
+                <!-- System Flagged Transactions -->
+>>>>>>> 22f51a8 (asdfgfds)
+                <div class="circle-container">
+                    <div class="circle">
+                        <span class="percent" th:text="${systemFlaggedTxnsCount}">0</span>
+                    </div>
+                    <div class="label">System Flagged Transactions</div>
+<<<<<<< HEAD
+                    <button class="review-button" data-bs-toggle="modal"
+                        data-bs-target="#systemFlaggedModal">Review</button>
+                </div>
+
+=======
+                </div>
+
+                <!-- Reported Posts -->
+>>>>>>> 22f51a8 (asdfgfds)
+                <div class="circle-container">
+                    <div class="circle">
+                        <span class="percent" th:text="${reportedPostsCount}">0</span>
+                    </div>
+                    <div class="label">Reported Posts</div>
+<<<<<<< HEAD
+                    <button class="review-button" data-bs-toggle="modal"
+                        data-bs-target="#reportedPostsModal">Review</button>
+                </div>
+            </div>
+
+            <div class="notification-tab">
+                <h4><i class="fas fa-bell me-2"></i>Notifications</h4>
+                <div class="notifications-list">
+                    <div th:each="notif : ${notifications}" class="notification-item">
+                        <div class="notification-message" th:text="${notif.message}"></div>
+                        <form th:action="@{/notification/{id}/delete(id=${notif.id})}" method="post" style="margin: 0;">
+                            <button type="submit" class="notification-close">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+=======
+                </div>
+
+>>>>>>> 22f51a8 (asdfgfds)
+            </div>
+        </div>
+    </main>
+
+
+    <!-- Banned Members Modal -->
+    <div class="modal fade" id="bannedMembersModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Banned Members Review</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-hover table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col">User ID</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="member : ${bannedMembers}">
+                                <td th:text="${member.id}"></td>
+                                <td th:text="${member.name}"></td>
+                                <td th:text="${member.email}"></td>
+                                <td>
+                                    <form th:action="@{/unban/{id}(id=${member.id})}" method="post"
+                                        style="display: inline;">
+                                        <button type="submit" class="btn btn-outline-dark btn-sm">Unban</button>
+                                    </form>
+                                </td>
+
+                            </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Flagged Transactions Modal -->
+    <div class="modal fade" id="flaggedTxnsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Flagged Transactions Review</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-hover table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col">User ID</th>
+                                <th scope="col">Payment ID</th>
+                                <th scope="col">Transaction Date</th>
+                                <th scope="col">Transaction Type</th>
+                                <th scope="col">Flag Reason</th>
+                                <th scope="col">Transaction Amount</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="transaction : ${flaggedTxns}">
+                                <td th:text="${transaction.userID}"></td>
+                                <td th:text="${transaction.paymentId}"></td>
+                                <td th:text="${transaction.transactionDate}"></td>
+                                <td th:text="${transaction.transactionType}"></td>
+                                <td th:text="${transaction.flagReason}"></td>
+                                <td th:text="${transaction.transactionAmount}"></td>
+                                <td class="d-flex gap-2">
+                                    <form th:action="@{/unflag/{id}(id=${transaction.paymentId})}" method="post">
+                                        <input type="hidden" name="paymentId" th:value="${transaction.paymentId}" />
+                                        <button type="submit" class="btn btn-outline-dark btn-sm">
+                                            Unflag
+                                        </button>
+                                    </form>
+                                    <button class="btn btn-outline-dark btn-sm btn-report"
+                                        th:attr="data-txn-id=${transaction.paymentId}">
+                                        Report
+                                    </button>
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- System Flagged Transactions Modal -->
+    <div class="modal fade" id="systemFlaggedModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">System Flagged Transactions Review</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-hover table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col">User ID</th>
+                                <th scope="col">Payment ID</th>
+                                <th scope="col">Transaction Date</th>
+                                <th scope="col">Transaction Type</th>
+                                <th scope="col">Flag Reason</th>
+                                <th scope="col">Transaction Amount</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="transaction : ${systemFlaggedTxns}">
+                                <td th:text="${transaction.userID}"></td>
+                                <td th:text="${transaction.paymentId}"></td>
+                                <td th:text="${transaction.transactionDate}"></td>
+                                <td th:text="${transaction.transactionType}"></td>
+                                <td th:text="${transaction.flagReason}"></td>
+                                <td th:text="${transaction.transactionAmount}"></td>
+                                <td class="d-flex gap-2">
+                                    <form th:action="@{/unflag/{id}(id=${transaction.paymentId})}" method="post">
+                                        <input type="hidden" name="paymentId" th:value="${transaction.paymentId}" />
+                                        <button type="submit" class="btn btn-outline-dark btn-sm">
+                                            Unflag
+                                        </button>
+                                    </form>
+                                    <button class="btn btn-outline-dark btn-sm btn-report"
+                                        th:attr="data-txn-id=${transaction.paymentId}">
+                                        Report
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reported Posts Modal -->
+    <div class="modal fade" id="reportedPostsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Reported Posts Review</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-hover table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col">Post ID</th>
+                                <th scope="col">Post Content</th>
+                                <th>Report Reason</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="post : ${reportedPosts}">
+                                <td th:text="${post.id}"></td>
+                                <td>
+                                    <div class="card" style="max-width: 300px;">
+                                        <div class="card-body">
+                                            <p class="card-text" th:text="${post.content}">Post Content</p>
+                                            <img th:if="${post.image != null}" th:src="@{'/post/image/' + ${post.id}}"
+                                                alt="Post image" class="card-img-bottom img-fluid"
+                                                style="max-height: 150px; object-fit: cover;">
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <ul class="list-unstyled">
+                                        <li th:each="reportedPost : ${post.reportedPosts}"
+                                            th:text="${reportedPost.reason}">
+                                        </li>
+                                    </ul>
+                                </td>
+                                <td>
+                                    <form th:action="@{/posts/{id}/delete(id=${post.id})}" method="post"
+                                        style="display: inline;">
+                                        <button type="submit" class="btn btn-outline-dark btn-sm">Delete</button>
+                                    </form>
+
+                                    <form th:action="@{/reported-post/ignore-all/{postId}(postId=${post.id})}"
+                                        method="post" style="display: inline;">
+                                        <button type="submit" class="btn btn-outline-dark btn-sm">Ignore</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.querySelectorAll('.btn-report').forEach(button => {
+            button.addEventListener('click', function () {
+                const txnId = this.getAttribute('data-txn-id');
+
+                const loadingSpinner = document.createElement('div');
+                loadingSpinner.className = 'spinner-border spinner-border-sm ms-2';
+                loadingSpinner.setAttribute('role', 'status');
+                this.appendChild(loadingSpinner);
+                this.disabled = true;
+
+                fetch('/send-pdf-report?txnID=' + txnId, {
+                    method: 'POST'
+                })
+                    .then(response => response.text())
+                    .then(result => {
+                        loadingSpinner.remove();
+                        this.disabled = false;
+                        alert('Report sent successfully');
+                        window.location.replace('/admin-landing');
+                    })
+                    .catch(error => {
+                        loadingSpinner.remove();
+                        this.disabled = false;
+                        alert('Error sending report: ' + error);
+                    });
+            });
+        });
+
+
+
+    </script>
+</body>
+
+<<<<<<< HEAD
+</html>
+=======
+</html>
+>>>>>>> 22f51a8 (asdfgfds)
