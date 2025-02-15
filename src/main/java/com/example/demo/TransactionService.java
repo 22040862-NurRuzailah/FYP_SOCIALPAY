@@ -244,7 +244,7 @@ public class TransactionService {
         });
     }
 
-    @Scheduled(cron = "0 */5 * * * *") 
+    @Scheduled(cron = "0 * * * * *")
     public void systemAutomatedDetection() {
         List<Transaction> transactions = transactionRepository.findAll();
         for (Transaction transaction : transactions) {
@@ -260,7 +260,7 @@ public class TransactionService {
     }
 
 
-    @Scheduled(cron = "0 */5 * * * *") 
+    @Scheduled(cron = "0 * * * * *")
     public void banUser() {
         List<Member> members = memberRepository.findAll();
 

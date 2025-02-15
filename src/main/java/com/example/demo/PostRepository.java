@@ -33,4 +33,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             @Param("year") Integer year,
             @Param("month") Integer month
     );
+    
+    List<Post> findByDisabled(boolean disabled);
+    long countByMemberAndDisabled(Member member, boolean disabled);
 }
